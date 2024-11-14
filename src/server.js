@@ -34,7 +34,7 @@ app.get('/', (req, res) => {
 });
 
 // Routes
-app.use('/api', routes);
+app.use('/api/v1/', routes);
 
 // Start Server
 app.listen(PORT, () => {

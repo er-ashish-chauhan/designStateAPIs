@@ -1,2 +1,35 @@
 {"level":"info","message":"Shutting down server..."}
 {"level":"info","message":"Shutting down server..."}
+{"level":"info","message":"::1 - - [12/Nov/2024:19:56:46 +0000] \"GET / HTTP/1.1\" 200 12 \"-\" \"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36\""}
+{"level":"info","message":"::1 - - [12/Nov/2024:19:56:47 +0000] \"GET /favicon.ico HTTP/1.1\" 404 150 \"http://localhost:3000/\" \"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36\""}
+{"level":"info","message":"Shutting down server..."}
+{"level":"info","message":"Shutting down server..."}
+{"level":"info","message":"::1 - - [14/Nov/2024:16:12:16 +0000] \"POST /api/vi HTTP/1.1\" 404 146 \"-\" \"PostmanRuntime/7.42.0\""}
+{"level":"info","message":"::1 - - [14/Nov/2024:16:12:24 +0000] \"POST /api/v1 HTTP/1.1\" 404 146 \"-\" \"PostmanRuntime/7.42.0\""}
+{"level":"info","message":"::1 - - [14/Nov/2024:16:12:30 +0000] \"POST /api/v1/register HTTP/1.1\" 404 155 \"-\" \"PostmanRuntime/7.42.0\""}
+{"level":"info","message":"::1 - - [14/Nov/2024:16:13:42 +0000] \"POST /api/v1/register HTTP/1.1\" 404 155 \"-\" \"PostmanRuntime/7.42.0\""}
+{"level":"info","message":"::1 - - [14/Nov/2024:16:13:53 +0000] \"POST /api/register HTTP/1.1\" 404 152 \"-\" \"PostmanRuntime/7.42.0\""}
+{"level":"info","message":"::1 - - [14/Nov/2024:16:13:59 +0000] \"POST /api/v1/register HTTP/1.1\" 404 155 \"-\" \"PostmanRuntime/7.42.0\""}
+{"level":"info","message":"::1 - - [14/Nov/2024:16:14:27 +0000] \"POST /api/v1/users/register HTTP/1.1\" 500 33 \"-\" \"PostmanRuntime/7.42.0\""}
+{"level":"info","message":"::1 - - [14/Nov/2024:16:14:55 +0000] \"POST /api/v1/users/register HTTP/1.1\" 500 103 \"-\" \"PostmanRuntime/7.42.0\""}
+{"level":"info","message":"::1 - - [14/Nov/2024:16:15:34 +0000] \"POST /api/v1/users/register HTTP/1.1\" 201 90 \"-\" \"PostmanRuntime/7.42.0\""}
+{"level":"info","message":"::1 - - [14/Nov/2024:16:16:06 +0000] \"POST /api/v1/users/register HTTP/1.1\" 500 28 \"-\" \"PostmanRuntime/7.42.0\""}
+{"level":"info","message":"::1 - - [14/Nov/2024:16:16:29 +0000] \"POST /api/v1/users/register HTTP/1.1\" 201 90 \"-\" \"PostmanRuntime/7.42.0\""}
+{"level":"info","message":"::1 - - [14/Nov/2024:16:31:03 +0000] \"POST /api/v1/llogin HTTP/1.1\" 404 153 \"-\" \"PostmanRuntime/7.42.0\""}
+{"level":"info","message":"::1 - - [14/Nov/2024:16:31:13 +0000] \"POST /api/v1/login HTTP/1.1\" 401 37 \"-\" \"PostmanRuntime/7.42.0\""}
+{"level":"info","message":"::1 - - [14/Nov/2024:16:31:27 +0000] \"POST /api/v1/login HTTP/1.1\" 500 42 \"-\" \"PostmanRuntime/7.42.0\""}
+{"level":"info","message":"::1 - - [14/Nov/2024:16:31:47 +0000] \"POST /api/v1/login HTTP/1.1\" 500 42 \"-\" \"PostmanRuntime/7.42.0\""}
+{"level":"info","message":"::1 - - [14/Nov/2024:16:33:05 +0000] \"POST /api/v1/login HTTP/1.1\" 200 191 \"-\" \"PostmanRuntime/7.42.0\""}
+{"level":"info","message":"::1 - - [14/Nov/2024:16:33:35 +0000] \"POST /api/v1/login HTTP/1.1\" 200 205 \"-\" \"PostmanRuntime/7.42.0\""}
+{"level":"info","message":"::1 - - [14/Nov/2024:16:36:43 +0000] \"GET /api/v1/users/getUserDetails HTTP/1.1\" 401 36 \"-\" \"PostmanRuntime/7.42.0\""}
+{"level":"info","message":"::1 - - [14/Nov/2024:16:36:47 +0000] \"POST /api/v1/login HTTP/1.1\" 200 205 \"-\" \"PostmanRuntime/7.42.0\""}
+{"level":"info","message":"::1 - - [14/Nov/2024:16:36:56 +0000] \"GET /api/v1/users/getUserDetails HTTP/1.1\" 401 36 \"-\" \"PostmanRuntime/7.42.0\""}
+{"level":"info","message":"::1 - - [14/Nov/2024:16:38:00 +0000] \"GET /api/v1/users/getUserDetails HTTP/1.1\" 401 36 \"-\" \"PostmanRuntime/7.42.0\""}
+{"level":"info","message":"::1 - - [14/Nov/2024:16:38:22 +0000] \"GET /api/v1/users/getUserDetails HTTP/1.1\" 401 36 \"-\" \"PostmanRuntime/7.42.0\""}
+{"level":"info","message":"::1 - - [14/Nov/2024:16:48:54 +0000] \"GET /api/v1/users/getUserDetails HTTP/1.1\" 200 81 \"-\" \"PostmanRuntime/7.42.0\""}
+{"level":"info","message":"::1 - - [14/Nov/2024:16:50:05 +0000] \"POST /api/v1/login HTTP/1.1\" 200 205 \"-\" \"PostmanRuntime/7.42.0\""}
+{"level":"info","message":"::1 - - [14/Nov/2024:16:50:30 +0000] \"GET /api/v1/users/getUserDetails HTTP/1.1\" 200 81 \"-\" \"PostmanRuntime/7.42.0\""}
+{"level":"info","message":"::1 - - [14/Nov/2024:16:51:18 +0000] \"GET /api/v1users/getUserDetails HTTP/1.1\" 404 165 \"-\" \"PostmanRuntime/7.42.0\""}
+{"level":"info","message":"::1 - - [14/Nov/2024:16:51:31 +0000] \"GET /api/v1/users/getUserDetails HTTP/1.1\" 200 81 \"-\" \"PostmanRuntime/7.42.0\""}
+{"level":"info","message":"::1 - - [14/Nov/2024:16:52:07 +0000] \"GET /api/v1/users/getUserDetails HTTP/1.1\" 200 81 \"-\" \"PostmanRuntime/7.42.0\""}
+{"level":"info","message":"::1 - - [14/Nov/2024:16:52:24 +0000] \"POST /api/v1/users/register HTTP/1.1\" 500 28 \"-\" \"PostmanRuntime/7.42.0\""}
