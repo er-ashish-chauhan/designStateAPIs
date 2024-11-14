@@ -24,17 +24,7 @@ const logger = winston.createLogger({
 });
 
 // Enable CORS for all routes
-app.use(cors({
-    origin: (origin, callback) => {
-        const allowedOrigins = ['http://localhost:3000', 'http://54.164.156.87:3000'];
-        if (!origin || allowedOrigins.includes(origin)) {
-            callback(null, true);
-        } else {
-            callback(new Error('Not allowed by CORS'));
-        }
-    }
-}));
-
+app.use(cors());
 
 // Middleware for logging HTTP requests
 app.use(morgan('combined', { stream: { write: message => logger.info(message.trim()) } }));
