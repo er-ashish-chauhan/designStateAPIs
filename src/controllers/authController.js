@@ -39,3 +39,67 @@ exports.loginUser = async (req, res) => {
         res.status(500).json({ error: 'An error occurred during login' });
     }
 };
+
+exports.createUser = async (req, res) => {
+    try {
+        const { firstname, lastname, email, password, age } = req.body;
+
+        // Validate required fields
+        if (!firstname || !lastname || !email || !password) {
+            return res.status(400).json(formatResponse(null, "All fields are required.", false));
+        }
+
+        // Hash the password before storing it
+        const saltRounds = 10; // Adjust this value as needed for security/performance balance
+        const hashedPassword = await bcrypt.hash(String(password), saltRounds);
+
+        // Create a new user with the hashed password
+        const newUser = await User.create({ firstname, lastname, age, email, password: hashedPassword });
+
+        // Exclude the password in the response
+        const userResponse = { id: newUser.id, firstname: newUser.firstname, lastname: newUser.lastname, email: newUser.email, age: newUser.age };
+
+        // const user = await User.create(req.body);
+        res.status(201).json(formatResponse(userResponse, "User registered successfully."));
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
+
+exports.checkUserExist = async (req, res) => {
+    try {
+        const { email } = req.query;
+
+        // Validate input
+        if (!email) {
+            return res.status(400).json(formatResponse(null, 'Email is required', false));
+        }
+
+        // Search for user in the database
+        const user = await User.findOne({ where: { email } });
+
+        if (user) {
+            const {
+                id,
+                firstname,
+                lastname,
+                email,
+                age
+            } = user;
+            // User exists
+            return res.status(200).json(formatResponse({
+                id,
+                firstname,
+                lastname,
+                email,
+                age
+            }, 'User exists', true));
+        }
+
+        // User does not exist
+        return res.status(200).json(formatResponse(null, 'User does not exist', false));
+    } catch (error) {
+        console.error('Error in checkUserExist:', error);
+        return res.status(500).json(formatResponse(null, 'Internal server error', false));
+    }
+};

@@ -11,6 +11,12 @@ const router = express.Router();
 // Login route
 router.post('/login', authController.loginUser);
 
+// Route to register new user
+router.post('/register', authController.createUser);
+
+// Route to check if user exist
+router.get('/check-user', authController.checkUserExist);
+
 // Users route
 router.use('/users', userRoutes); // Base route for users
 
