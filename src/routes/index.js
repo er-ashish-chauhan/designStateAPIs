@@ -1,6 +1,7 @@
 const express = require('express');
 const userRoutes = require('./userRoutes'); // User-specific routes
 const productRoutes = require('./productRoutes'); // Products-specific routes
+const projectsRoutes = require('./projectsRoutes'); // Products-specific routes
 
 const authController = require('../controllers/authController');
 
@@ -21,5 +22,7 @@ router.get('/check-user', authController.checkUserExist);
 router.use('/users', userRoutes); // Base route for users
 
 router.use('/product', productRoutes); // Base route for products
+
+router.use('/project', projectsRoutes); // Base route for projects
 
 module.exports = router;

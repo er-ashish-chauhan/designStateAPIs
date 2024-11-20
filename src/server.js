@@ -8,6 +8,9 @@ const winston = require('winston');
 const User = require('./models/User');
 const UserProfile = require('./models/UserProfile');
 const ProductCategories = require('./models/ProductCategories');
+const ProjectGroups = require('./models/ProjectGroups');
+const ProjectImages = require('./models/ProjectImages');
+const Projects = require('./models/Projects');
 const cors = require('cors');
 
 const app = express();
