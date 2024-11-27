@@ -57,10 +57,13 @@ exports.createUser = async (req, res) => {
         const newUser = await User.create({ firstname, lastname, age, email, password: hashedPassword });
 
         // Exclude the password in the response
-        const userResponse = { id: newUser.id, firstname: newUser.firstname, lastname: newUser.lastname, email: newUser.email, age: newUser.age };
-
+        // const userResponse = { id: newUser.id, firstname: newUser.firstname, lastname: newUser.lastname, email: newUser.email, age: newUser.age };
+        // Generate JWT token
+        const token = jwt.sign({ id: newUser.id, email: newUser.email }, JWT_SECRET, {
+            expiresIn: '7d', // Token validity duration
+        });
         // const user = await User.create(req.body);
-        res.status(201).json(formatResponse(userResponse, "User registered successfully."));
+        res.status(201).json(formatResponse(token, "User registered successfully."));
     } catch (error) {
         res.status(500).json({ error: error.message });
     }

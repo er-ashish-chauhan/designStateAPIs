@@ -4,8 +4,11 @@ const productRoutes = require('./productRoutes'); // Products-specific routes
 const projectsRoutes = require('./projectsRoutes'); // Products-specific routes
 
 const authController = require('../controllers/authController');
+const { uploadImage } = require('../controllers/uploadImageController');
 
 const router = express.Router();
+
+const authenticateToken = require('../middlewares/authMiddleware');
 
 // Define routes
 
@@ -24,5 +27,7 @@ router.use('/users', userRoutes); // Base route for users
 router.use('/product', productRoutes); // Base route for products
 
 router.use('/project', projectsRoutes); // Base route for projects
+
+router.post('/uploadImage', authenticateToken, uploadImage); // Base route for upload image
 
 module.exports = router;

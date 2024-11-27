@@ -14,11 +14,18 @@ const Projects = sequelize.define('Projects', {
         type: DataTypes.STRING,
         allowNull: false,
     },
+    lastAction: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        defaultValue: "project_created"
+    },
     deleted: {
         type: DataTypes.BOOLEAN,
         allowNull: false,
         defaultValue: false
     }
+}, {
+    timestamps: true, // Ensure timestamps are enabled
 });
 
 module.exports = Projects;

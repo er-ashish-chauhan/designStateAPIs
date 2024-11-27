@@ -6,21 +6,28 @@ const ProjectImages = sequelize.define('ProjectImages', {
         type: DataTypes.INTEGER,
         allowNull: false,
     },
-    imageUrl: {
-        type: DataTypes.STRING,
+    imageId: {
+        type: DataTypes.INTEGER,
         allowNull: false,
     },
     name: {
         type: DataTypes.STRING,
         allowNull: false,
     },
+    type: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        defaultValue: null
+    },
     dimensions: {
         type: DataTypes.JSON,
         allowNull: false,
+        defaultValue: null
     },
     deleted: {
         type: DataTypes.BOOLEAN,
         allowNull: false,
+        defaultValue: false
     }
 });
 

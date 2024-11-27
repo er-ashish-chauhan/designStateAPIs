@@ -18,4 +18,10 @@ router.delete('/deleteProject/:id', authenticateToken, projectsController.delete
 // Route for deleting a project group
 router.delete('/deleteProjectGroup/:id', authenticateToken, projectsController.deleteProjectGroup);
 
+// Route for save project images
+router.post('/saveProjectImages', authenticateToken, projectsController.saveProjectImage);
+
+// Route for get project images
+router.get('/getProjectImages/:projectId', authenticateToken, projectsController.getImagesForProject);
+
 module.exports = router;

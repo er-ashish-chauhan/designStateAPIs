@@ -9,4 +9,11 @@ router.get('/', authenticateToken, userController.getAllUsers);
 
 router.get('/getUserDetails', authenticateToken, userController.getUserDetails);
 
+router.get('/saveImagesToGallery', authenticateToken, userController.saveImagesToGallery);
+
+router.get('/getGalleryImages', authenticateToken, userController.getUserGalleryImages);
+
+// Route for delete images
+router.delete('/deleteGalleryImage/:imageId', authenticateToken, userController.deleteImageFromGallery);
+
 module.exports = router;
