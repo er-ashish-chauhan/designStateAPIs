@@ -168,7 +168,7 @@ exports.getProjectsByGroup = async (req, res) => {
         // Fetch projects with their images and associated UserGallery with pagination
         const projects = await Projects.findAll({
             where: { projectGroupId: projectGroupId, deleted: false },
-            attributes: ['id', 'projectGroupId', 'name', 'type'],
+            attributes: ['id', 'projectGroupId', 'name', 'type', 'updatedAt'],
             include: [
                 {
                     model: ProjectImages,
