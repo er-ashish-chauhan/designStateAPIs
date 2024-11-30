@@ -10,7 +10,7 @@ router.get('/getGroups', authenticateToken, projectsController.getAllGroups);
 router.post('/createProject', authenticateToken, projectsController.createProject);
 
 // Route for get all projects by group
-router.get('/getProjectsByGroup/:projectGroupId', authenticateToken, projectsController.getProjectsByGroup);
+router.get('/getProjectsByGroup', authenticateToken, projectsController.getProjectsByGroup);
 
 // Route for deleting a project
 router.delete('/deleteProject/:id', authenticateToken, projectsController.deleteProject);

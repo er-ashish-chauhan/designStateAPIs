@@ -9,7 +9,7 @@ router.get('/', authenticateToken, userController.getAllUsers);
 
 router.get('/getUserDetails', authenticateToken, userController.getUserDetails);
 
-router.get('/saveImagesToGallery', authenticateToken, userController.saveImagesToGallery);
+router.post('/saveImagesToGallery', authenticateToken, userController.saveImagesToGallery);
 
 router.get('/getGalleryImages', authenticateToken, userController.getUserGalleryImages);
 

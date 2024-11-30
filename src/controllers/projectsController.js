@@ -65,7 +65,7 @@ exports.getAllGroups = async (req, res) => {
                         })),
                     }
                     : null;
-                
+
                 return {
                     id: group.id,
                     name: group.name,
@@ -130,9 +130,13 @@ exports.createProject = async (req, res) => {
     }
 };
 
-// get projects list by group id
+// Get projects list by group id with pagination
 exports.getProjectsByGroup = async (req, res) => {
-    const { projectGroupId } = req.params;
+    const projectGroupId = parseInt(req.query.groupId);
+    // Pagination parameters
+    const page = parseInt(req.query.page) || 1;  // Default to page 1 if not provided
+    const pageSize = parseInt(req.query.pageSize) || 10;  // Default to 10 items per page if not provided
+    const offset = (page - 1) * pageSize;  // Calculate offset for pagination
 
     try {
         // Check if projectGroupId is provided
@@ -154,7 +158,14 @@ exports.getProjectsByGroup = async (req, res) => {
                 .json(formatResponse(null, "Project group not found.", false));
         }
 
-        // Fetch projects with their images and associated UserGallery
+        // Fetch the total count of projects for pagination metadata
+        const totalProjects = await Projects.count({
+            where: { projectGroupId: projectGroupId, deleted: false },
+        });
+
+        const totalPages = Math.ceil(totalProjects / pageSize); // Calculate total pages
+
+        // Fetch projects with their images and associated UserGallery with pagination
         const projects = await Projects.findAll({
             where: { projectGroupId: projectGroupId, deleted: false },
             attributes: ['id', 'projectGroupId', 'name', 'type'],
@@ -174,6 +185,8 @@ exports.getProjectsByGroup = async (req, res) => {
                     ]
                 }
             ],
+            limit: pageSize,  // Limit the number of projects returned per page
+            offset: offset,   // Skip the previous pages based on offset
         });
 
         // Transform the response to place `imageUrl` at the top level of each image
@@ -194,19 +207,26 @@ exports.getProjectsByGroup = async (req, res) => {
             }))
         }));
 
-        // Prepare the final response
+        // Prepare the final response with pagination metadata
         const response = {
             groupId: group.id,
             groupName: group.name,
             projects: transformedProjects,
+            pagination: {
+                totalItems: totalProjects,
+                totalPages: totalPages,
+                currentPage: page,
+                pageSize: pageSize,
+            }
         };
 
-        res
+        return res
             .status(200)
             .json(formatResponse(response, "Projects fetched successfully.", true));
+
     } catch (error) {
         console.error("Error fetching projects by group:", error);
-        res
+        return res
             .status(500)
             .json(formatResponse(null, error.message, false));
     }

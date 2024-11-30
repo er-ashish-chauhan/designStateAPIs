@@ -14,6 +14,26 @@ const UserGallery = sequelize.define('UserGallery', {
     type: DataTypes.STRING,
     allowNull: false,
   },
+  type: {
+    type: DataTypes.STRING,
+    allowNull: false,
+    defaultValue: null
+  },
+  dimensions: {
+    type: DataTypes.JSON,
+    allowNull: false,
+    defaultValue: null
+  },
+  dimensionUnit: {
+    type: DataTypes.STRING,
+    allowNull: false,
+    defaultValue: null
+  },
+  deleted: {
+    type: DataTypes.BOOLEAN,
+    allowNull: false,
+    defaultValue: false
+  }
 });
 
 

@@ -54,17 +54,20 @@ exports.saveImagesToGallery = async (req, res) => {
       }
 
       // Extract image URLs from the request body
-      const { images } = req.body; // `images` is expected to be an array of image URLs
+      const body = req.body; // `images` is expected to be an array of image URLs
 
-      if (!images || !Array.isArray(images) || images.length === 0) {
+      if (!body || !Array.isArray(body) || body.length === 0) {
           return res.status(400).json(formatResponse(null, 'No images provided for saving', false));
       }
 
       // Prepare gallery entries
-      const galleryEntries = images.map(imageUrl => ({
+      const galleryEntries = body.map(i => ({
           userId,
-          imageUrl,
-          imageName: path.basename(imageUrl), // Extract file name from URL
+          imageUrl: i.url,
+          imageName: path.basename(i.url), // Extract file name from URL
+          dimensions: i.dimensions,
+          dimensionUnit: i.dimensionUnit,
+          type: i.type
       }));
 
       // Bulk insert into UserGallery
@@ -77,24 +80,55 @@ exports.saveImagesToGallery = async (req, res) => {
   }
 };
 
-// Get images from UserGallery by user
+// Get images from UserGallery by user with pagination
 exports.getUserGalleryImages = async (req, res) => {
   try {
       const userId = req.user.id; // Retrieve userId from token (req.user set by auth middleware)
-      // Fetch images from UserGallery for the given user
+
+      // Pagination parameters
+      const page = parseInt(req.query.page) || 1;  // Default to page 1 if not provided
+      const pageSize = parseInt(req.query.pageSize) || 10;  // Default to 10 items per page if not provided
+
+      // Calculate offset
+      const offset = (page - 1) * pageSize;
+
+      // Fetch images from UserGallery for the given user with pagination
       const images = await UserGallery.findAll({
           where: {
               userId: userId,
+              deleted : false
           },
-          attributes: ['id', 'imageUrl', 'imageName', 'createdAt'], // Customize fields if needed
+          attributes: ['id', 'imageUrl', 'imageName', 'dimensions', 'dimensionUnit', 'type', 'createdAt'], // Customize fields if needed
           order: [['createdAt', 'DESC']], // Sort by latest
+          limit: pageSize,  // Limit the number of images returned per page
+          offset: offset,   // Skip the previous pages
       });
+
+      // Fetch the total count of images for pagination metadata
+      const totalImages = await UserGallery.count({
+          where: {
+              userId: userId,
+          },
+      });
+
+      const totalPages = Math.ceil(totalImages / pageSize); // Calculate total pages
 
       if (images.length === 0) {  
           return res.status(404).json(formatResponse(null, 'No images found for this user.', false));
       }
 
-      return res.status(200).json(formatResponse(images, 'Images fetched successfully.', true));
+      // Return paginated data with metadata
+      return res.status(200).json({
+          data: images,
+          pagination: {
+              totalItems: totalImages,
+              totalPages: totalPages,
+              currentPage: page,
+              pageSize: pageSize,
+          },
+          message: 'Images fetched successfully.',
+          success: true,
+      });
   } catch (error) {
       console.error('Error fetching user gallery images:', error);
       return res.status(500).json(formatResponse(null, error.message, false));
@@ -140,7 +174,10 @@ exports.deleteImageFromGallery = async (req, res) => {
       await s3.deleteObject(s3Params).promise();
 
       // Remove the image from UserGallery
-      await userGalleryImage.destroy();
+      // await userGalleryImage.destroy();
+      await userGalleryImage.update({
+        deleted: true
+      })
 
       // Return a success response
       return res.status(200).json(formatResponse(null, 'Image deleted successfully from UserGallery and S3.', true));
