@@ -1,0 +1,396 @@
+Detected {class_name} at ({xmin}, {ymin}, {xmax}, {ymax})
+
+pexels-houzlook-3797991.jpg =
+Detected couch at (306, 312, 511, 511)
+Detected chair at (358, 308, 417, 379)
+Detected tv at (225, 251, 288, 324)
+Detected potted plant at (39, 287, 77, 392)
+
+interior-with-large-window-rendered-illustration.jpg =
+No objects detected.
+
+large-luxury-modern-minimal-bright-interiors-room-mockup-illustration-3d-rendering.jpg =
+Detected potted plant at (426, 220, 508, 436)
+Detected vase at (454, 376, 503, 435)
+
+blue-interior-with-empty-wall-side.jpg =
+Detected potted plant at (169, 294, 188, 355)
+Detected chair at (211, 313, 243, 404)
+Detected vase at (173, 342, 184, 355)
+
+interior-with-sofa.jpg =
+Detected chair at (27, 273, 135, 424)
+Detected vase at (242, 348, 263, 383)
+Detected couch at (183, 267, 508, 439)
+Detected vase at (159, 307, 184, 369)
+Detected vase at (231, 359, 245, 385)
+Detected potted plant at (155, 184, 199, 368)
+
+interior-has-sofa-armchair-empty-dark-wall-background-3d-rendering.jpg =
+Detected chair at (393, 308, 499, 443)
+Detected couch at (140, 291, 371, 414)
+Detected potted plant at (86, 254, 148, 408)
+Detected potted plant at (455, 225, 511, 367)
+Detected vase at (409, 292, 428, 317)
+Detected vase at (388, 290, 401, 313)
+Detected potted plant at (25, 304, 74, 376)
+Detected potted plant at (410, 281, 429, 317)
+Detected vase at (36, 346, 56, 376)
+Detected vase at (104, 367, 132, 409)
+Detected potted plant at (0, 206, 23, 395)
+
+modern-living-room-interior-with-sofa-green-plants-lamp-table-living-3d-renderin.jpg =
+Detected potted plant at (460, 262, 511, 429)
+Detected vase at (201, 184, 218, 220)
+Detected vase at (151, 197, 168, 220)
+Detected couch at (129, 245, 388, 452)
+Detected potted plant at (143, 163, 171, 221)
+Detected potted plant at (191, 117, 231, 220)
+Detected chair at (130, 249, 388, 456)
+Detected vase at (180, 190, 199, 220)
+Detected dining table at (398, 340, 462, 432)
+
+illustration-3d-rendering-large-luxury-modern-bright-interiors-living-room-mockup-computer-digitally-generated-image.jpg =
+Detected chair at (292, 300, 387, 411)
+
+modern-bright-bed-room-interiors-3d-rendering-illustration.jpg =
+Detected vase at (42, 296, 71, 369)
+
+modern-bright-interiors-apartment-living-room-3d-rendering-illustration.jpg =
+Detected chair at (83, 254, 183, 407)
+
+illustration-living-room-interior (1).jpg =
+Detected chair at (335, 285, 428, 416)
+Detected couch at (111, 285, 309, 433)
+
+empty-room-interior-white-background-3d-render-illustration.jpg =
+No objects detected.
+
+gray-sofa-white-living-room-interior-with-copy-space-3d-rendering.jpg =
+Detected potted plant at (15, 288, 90, 446)
+Detected vase at (323, 380, 333, 406)
+Detected couch at (104, 310, 413, 463)
+Detected potted plant at (315, 356, 340, 406)
+Detected couch at (97, 313, 308, 459)
+Detected potted plant at (436, 340, 458, 379)
+
+empty-room-night-with-white-wall-herringbone-floor-wide-panoramic-window-gray-curtain.jpg =
+No objects detected.
+
+white-room-has-brown-doors.jpg =
+Detected potted plant at (475, 346, 511, 415)
+
+modern-bright-interiors-3d-rendering-illustration (1).jpg =
+Detected chair at (19, 284, 131, 505)
+
+modern-living-room-interior-with-sofa-green-plants-lamp-table-white-wall-background.jpg =
+Detected couch at (121, 289, 382, 409)
+Detected potted plant at (69, 308, 90, 338)
+Detected potted plant at (420, 277, 463, 384)
+Detected vase at (437, 363, 455, 391)
+Detected vase at (385, 225, 402, 261)
+Detected book at (408, 193, 417, 220)
+
+terracotta-color-paint-living-room-3d-rendering.jpg =
+Detected couch at (0, 270, 158, 430)
+Detected vase at (159, 388, 181, 440)
+Detected vase at (198, 299, 230, 345)
+Detected vase at (187, 344, 233, 433)
+Detected potted plant at (197, 228, 231, 346)
+Detected potted plant at (149, 322, 194, 438)
+Detected potted plant at (0, 293, 23, 386)
+Detected vase at (0, 347, 21, 382)
+
+modern-furniture-bright-living-room.jpg =
+Detected potted plant at (39, 60, 183, 377)
+Detected potted plant at (379, 273, 428, 335)
+Detected vase at (68, 303, 130, 377)
+Detected vase at (393, 309, 412, 335)
+Detected couch at (152, 268, 392, 386)
+
+modern-bright-interiors-3d-rendering-illustration (2).jpg =
+No objects detected.
+
+sofa-living-room-with-copy-space.jpg =
+Detected couch at (139, 304, 410, 430)
+Detected potted plant at (430, 312, 454, 348)
+Detected vase at (75, 368, 119, 431)
+Detected potted plant at (54, 168, 145, 434)
+Detected potted plant at (413, 324, 426, 347)
+Detected vase at (431, 332, 452, 348)
+
+modern-bright-interiors-3d-rendering-illustration.jpg =
+Detected chair at (17, 252, 132, 412)
+Detected chair at (22, 254, 134, 483)
+Detected person at (35, 315, 115, 412)
+
+large-luxury-modern-bright-interiors-living-room-mockup-illustration-3d-rendering-computer-digitally-generated-image.jpg =
+Detected vase at (10, 337, 58, 453)
+Detected potted plant at (0, 236, 76, 453)
+Detected potted plant at (0, 236, 75, 361)
+
+modern-bright-interiors-empty-room-3d-rendering-illustration.jpg =
+No objects detected.
+
+modern-empty-room-design-3d-rendering.jpg =
+No objects detected.
+
+cabinet-tv-modern-living-room-interior-bright-living-room-with-armchair-empty-blue-wall.jpg =
+Detected chair at (374, 302, 463, 462)
+Detected potted plant at (452, 130, 511, 445)
+Detected potted plant at (66, 276, 139, 435)
+Detected vase at (352, 347, 364, 374)
+Detected vase at (362, 356, 375, 375)
+Detected vase at (88, 387, 118, 435)
+Detected bottle at (414, 190, 424, 227)
+Detected potted plant at (351, 338, 364, 374)
+Detected bottle at (426, 190, 438, 229)
+Detected potted plant at (355, 339, 375, 376)
+Detected vase at (338, 339, 348, 374)
+Detected potted plant at (351, 339, 371, 374)
+
+mockup-cabinet-modern-living-room-with-blue-armchair-plant-dark-gray-wall-background-3d-rendering.jpg =
+Detected vase at (351, 375, 382, 431)
+Detected chair at (66, 300, 148, 451)
+Detected potted plant at (324, 249, 405, 431)
+Detected potted plant at (16, 303, 55, 374)
+Detected vase at (28, 347, 41, 374)
+Detected potted plant at (73, 203, 103, 303)
+
+empty-room-with-gray-wall-wood-floor-3d-rendering.jpg =
+No objects detected.
+
+illustration-living-room-interior.jpg =
+Detected couch at (0, 274, 202, 444)
+Detected potted plant at (340, 363, 376, 436)
+Detected potted plant at (309, 373, 343, 442)
+Detected vase at (109, 345, 134, 395)
+Detected vase at (87, 371, 105, 396)
+Detected vase at (320, 414, 339, 442)
+Detected chair at (0, 413, 36, 490)
+
+test-image.jpeg =
+Detected chair at (60, 346, 175, 450)
+Detected couch at (317, 361, 467, 468)
+Detected potted plant at (360, 245, 445, 355)
+Detected book at (228, 370, 277, 388)
+
+test-image.jpeg =
+Detected chair at (60, 346, 175, 450)
+Detected couch at (317, 361, 467, 468)
+Detected potted plant at (360, 245, 445, 355)
+Detected book at (228, 370, 277, 388)
+
+test-image.jpeg =
+Detected chair at (120, 692, 350, 900)
+Detected couch at (634, 723, 934, 936)
+Detected potted plant at (720, 491, 890, 711)
+Detected book at (456, 740, 554, 777)
+
+mockup-cabinet-modern-living-room-with-blue-armchair-plant-dark-gray-wall-background-3d-rendering.jpg =
+Detected vase at (3293, 1978, 3587, 2276)
+Detected chair at (624, 1586, 1395, 2380)
+Detected potted plant at (3042, 1317, 3802, 2277)
+Detected potted plant at (155, 1600, 517, 1972)
+Detected vase at (270, 1829, 393, 1972)
+Detected potted plant at (687, 1073, 968, 1600)
+
+mockup-cabinet-modern-living-room-with-blue-armchair-plant-dark-gray-wall-background-3d-rendering.jpg =
+Detected vase at (3293, 1978, 3587, 2276)
+Detected chair at (624, 1586, 1395, 2380)
+Detected potted plant at (3042, 1317, 3802, 2277)
+Detected potted plant at (155, 1600, 517, 1972)
+Detected vase at (270, 1829, 393, 1972)
+Detected potted plant at (687, 1073, 968, 1600)
+
+mockup-cabinet-modern-living-room-with-blue-armchair-plant-dark-gray-wall-background-3d-rendering.jpg =
+Detected vase at (3293, 1978, 3587, 2276)
+Detected chair at (624, 1586, 1395, 2380)
+Detected potted plant at (3042, 1317, 3802, 2277)
+Detected potted plant at (155, 1600, 517, 1972)
+Detected vase at (270, 1829, 393, 1972)
+Detected potted plant at (687, 1073, 968, 1600)
+
+mockup-cabinet-modern-living-room-with-blue-armchair-plant-dark-gray-wall-background-3d-rendering.jpg =
+Detected vase at (3293, 1978, 3587, 2276)
+Detected chair at (624, 1586, 1395, 2380)
+Detected potted plant at (3042, 1317, 3802, 2277)
+Detected potted plant at (155, 1600, 517, 1972)
+Detected vase at (270, 1829, 393, 1972)
+Detected potted plant at (687, 1073, 968, 1600)
+
+mockup-cabinet-modern-living-room-with-blue-armchair-plant-dark-gray-wall-background-3d-rendering.jpg =
+Detected vase at (3293, 1978, 3587, 2276)
+Detected chair at (624, 1586, 1395, 2380)
+Detected potted plant at (3042, 1317, 3802, 2277)
+Detected potted plant at (155, 1600, 517, 1972)
+Detected vase at (270, 1829, 393, 1972)
+Detected potted plant at (687, 1073, 968, 1600)
+
+mockup-cabinet-modern-living-room-with-blue-armchair-plant-dark-gray-wall-background-3d-rendering.jpg =
+Detected vase at (3293, 1978, 3587, 2276)
+Detected chair at (624, 1586, 1395, 2380)
+Detected potted plant at (3042, 1317, 3802, 2277)
+Detected potted plant at (155, 1600, 517, 1972)
+Detected vase at (270, 1829, 393, 1972)
+Detected potted plant at (687, 1073, 968, 1600)
+
+mockup-cabinet-modern-living-room-with-blue-armchair-plant-dark-gray-wall-background-3d-rendering.jpg =
+Detected vase at (3293, 1978, 3587, 2276)
+Detected chair at (624, 1586, 1395, 2380)
+Detected potted plant at (3042, 1317, 3802, 2277)
+Detected potted plant at (155, 1600, 517, 1972)
+Detected vase at (270, 1829, 393, 1972)
+Detected potted plant at (687, 1073, 968, 1600)
+
+mockup-cabinet-modern-living-room-with-blue-armchair-plant-dark-gray-wall-background-3d-rendering.jpg =
+Detected vase at (3293, 1978, 3587, 2276)
+Detected chair at (624, 1586, 1395, 2380)
+Detected potted plant at (3042, 1317, 3802, 2277)
+Detected potted plant at (155, 1600, 517, 1972)
+Detected vase at (270, 1829, 393, 1972)
+Detected potted plant at (687, 1073, 968, 1600)
+
+mockup-cabinet-modern-living-room-with-blue-armchair-plant-dark-gray-wall-background-3d-rendering.jpg =
+Detected vase at (3293, 1978, 3587, 2276)
+Detected chair at (624, 1586, 1395, 2380)
+Detected potted plant at (3042, 1317, 3802, 2277)
+Detected potted plant at (155, 1600, 517, 1972)
+Detected vase at (270, 1829, 393, 1972)
+Detected potted plant at (687, 1073, 968, 1600)
+
+mockup-cabinet-modern-living-room-with-blue-armchair-plant-dark-gray-wall-background-3d-rendering.jpg =
+Detected vase at (3293, 1978, 3587, 2276)
+Detected chair at (624, 1586, 1395, 2380)
+Detected potted plant at (3042, 1317, 3802, 2277)
+Detected potted plant at (155, 1600, 517, 1972)
+Detected vase at (270, 1829, 393, 1972)
+Detected potted plant at (687, 1073, 968, 1600)
+
+mockup-cabinet-modern-living-room-with-blue-armchair-plant-dark-gray-wall-background-3d-rendering.jpg =
+Detected vase at (3293, 1978, 3587, 2276)
+Detected chair at (624, 1586, 1395, 2380)
+Detected potted plant at (3042, 1317, 3802, 2277)
+Detected potted plant at (155, 1600, 517, 1972)
+Detected vase at (270, 1829, 393, 1972)
+Detected potted plant at (687, 1073, 968, 1600)
+
+mockup-cabinet-modern-living-room-with-blue-armchair-plant-dark-gray-wall-background-3d-rendering.jpg =
+Detected vase at (3293, 1978, 3587, 2276)
+Detected chair at (624, 1586, 1395, 2380)
+Detected potted plant at (3042, 1317, 3802, 2277)
+Detected potted plant at (155, 1600, 517, 1972)
+Detected vase at (270, 1829, 393, 1972)
+Detected potted plant at (687, 1073, 968, 1600)
+
+mockup-cabinet-modern-living-room-with-blue-armchair-plant-dark-gray-wall-background-3d-rendering.jpg =
+Detected vase at (3293, 1978, 3587, 2276)
+Detected chair at (624, 1586, 1395, 2380)
+Detected potted plant at (3042, 1317, 3802, 2277)
+Detected potted plant at (155, 1600, 517, 1972)
+Detected vase at (270, 1829, 393, 1972)
+Detected potted plant at (687, 1073, 968, 1600)
+
+mockup-cabinet-modern-living-room-with-blue-armchair-plant-dark-gray-wall-background-3d-rendering.jpg =
+Detected vase at (3293, 1978, 3587, 2276)
+Detected chair at (624, 1586, 1395, 2380)
+Detected potted plant at (3042, 1317, 3802, 2277)
+Detected potted plant at (155, 1600, 517, 1972)
+Detected vase at (270, 1829, 393, 1972)
+Detected potted plant at (687, 1073, 968, 1600)
+
+mockup-cabinet-modern-living-room-with-blue-armchair-plant-dark-gray-wall-background-3d-rendering.jpg =
+Detected vase at (3293, 1978, 3587, 2276)
+Detected chair at (624, 1586, 1395, 2380)
+Detected potted plant at (3042, 1317, 3802, 2277)
+Detected potted plant at (155, 1600, 517, 1972)
+Detected vase at (270, 1829, 393, 1972)
+Detected potted plant at (687, 1073, 968, 1600)
+
+mockup-cabinet-modern-living-room-with-blue-armchair-plant-dark-gray-wall-background-3d-rendering.jpg =
+Detected vase at (3293, 1978, 3587, 2276)
+Detected chair at (624, 1586, 1395, 2380)
+Detected potted plant at (3042, 1317, 3802, 2277)
+Detected potted plant at (155, 1600, 517, 1972)
+Detected vase at (270, 1829, 393, 1972)
+Detected potted plant at (687, 1073, 968, 1600)
+
+
+=========================
+
+illustration-living-room-interior.jpg =
+Detected couch at (2, 1206, 1578, 1954)
+Detected potted plant at (2663, 1595, 2942, 1918)
+Detected potted plant at (2418, 1639, 2680, 1945)
+Detected vase at (854, 1518, 1047, 1739)
+Detected vase at (679, 1632, 820, 1743)
+Detected vase at (2504, 1823, 2649, 1944)
+Detected chair at (0, 1816, 288, 2155)
+
+illustration-living-room-interior.jpg =
+Detected couch at (2, 1206, 1578, 1954)
+Detected potted plant at (2663, 1595, 2942, 1918)
+Detected potted plant at (2418, 1639, 2680, 1945)
+Detected vase at (854, 1518, 1047, 1739)
+Detected vase at (679, 1632, 820, 1743)
+Detected vase at (2504, 1823, 2649, 1944)
+Detected chair at (0, 1816, 288, 2155)
+
+illustration-living-room-interior.jpg =
+Detected couch at (2, 1206, 1578, 1954)
+Detected potted plant at (2663, 1595, 2942, 1918)
+Detected potted plant at (2418, 1639, 2680, 1945)
+Detected vase at (854, 1518, 1047, 1739)
+Detected vase at (679, 1632, 820, 1743)
+Detected vase at (2504, 1823, 2649, 1944)
+Detected chair at (0, 1816, 288, 2155)
+
+illustration-living-room-interior.jpg =
+Detected couch at (2, 1206, 1578, 1954)
+Detected potted plant at (2663, 1595, 2942, 1918)
+Detected potted plant at (2418, 1639, 2680, 1945)
+Detected vase at (854, 1518, 1047, 1739)
+Detected vase at (679, 1632, 820, 1743)
+Detected vase at (2504, 1823, 2649, 1944)
+Detected chair at (0, 1816, 288, 2155)
+
+interior-with-sofa.jpg =
+Detected chair at (265, 2004, 1323, 3106)
+Detected vase at (2372, 2554, 2568, 2809)
+Detected couch at (1793, 1961, 4969, 3220)
+Detected vase at (1557, 2249, 1804, 2703)
+Detected vase at (2259, 2630, 2401, 2822)
+Detected potted plant at (1519, 1351, 1944, 2697)
+
+interior-with-sofa.jpg =
+Detected chair at (265, 2004, 1323, 3106)
+Detected vase at (2372, 2554, 2568, 2809)
+Detected couch at (1793, 1961, 4969, 3220)
+Detected vase at (1557, 2249, 1804, 2703)
+Detected vase at (2259, 2630, 2401, 2822)
+Detected potted plant at (1519, 1351, 1944, 2697)
+
+interior-with-sofa.jpg =
+Detected chair at (265, 2004, 1323, 3106)
+Detected vase at (2372, 2554, 2568, 2809)
+Detected couch at (1793, 1961, 4969, 3220)
+Detected vase at (1557, 2249, 1804, 2703)
+Detected vase at (2259, 2630, 2401, 2822)
+Detected potted plant at (1519, 1351, 1944, 2697)
+
+interior-with-sofa.jpg =
+Detected chair at (265, 2004, 1323, 3106)
+Detected vase at (2372, 2554, 2568, 2809)
+Detected couch at (1793, 1961, 4969, 3220)
+Detected vase at (1557, 2249, 1804, 2703)
+Detected vase at (2259, 2630, 2401, 2822)
+Detected potted plant at (1519, 1351, 1944, 2697)
+
+interior-with-sofa.jpg =
+Detected chair at (265, 2004, 1323, 3106)
+Detected vase at (2372, 2554, 2568, 2809)
+Detected couch at (1793, 1961, 4969, 3220)
+Detected vase at (1557, 2249, 1804, 2703)
+Detected vase at (2259, 2630, 2401, 2822)
+Detected potted plant at (1519, 1351, 1944, 2697)
+

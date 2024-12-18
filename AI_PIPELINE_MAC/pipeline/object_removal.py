@@ -1,4 +1,4 @@
-from config import HF_TOKEN, YOLO_MODEL_PATH, SD_MODEL_PATH, DEFAULT_DEVICE, INPAINT_METHOD
+from config import HF_TOKEN, YOLO_MODEL_PATH, SD_MODEL_PATH, DEFAULT_DEVICE, INPAINT_METHOD,DISPLAY_DETECTION
 from models.yolo_loader import load_yolo_model
 from models.sd_loader import load_stable_diffusion
 from utils.helpers import preprocess_image, create_mask, postprocess_image
@@ -6,6 +6,10 @@ from PIL import Image
 import numpy as np
 import cv2
 import matplotlib.pyplot as plt  # For macOS-compatible image display
+from config import DISPLAY_DETECTION, ENABLE_INPAINTING
+import os
+import matplotlib.pyplot as plt
+import random
 
 
 class ObjectRemovalPipeline:
@@ -18,11 +22,11 @@ class ObjectRemovalPipeline:
         if self.inpaint_method == "stable-diffusion":
             self.sd_pipeline = load_stable_diffusion(sd_model_path, self.token, device)
 
-    def detect_objects(self, image):
+    def detect_objects(self, preprocessed_image, original_image):
         print("Detecting all objects in the image...")
 
-        # Run inference on the image
-        results = self.yolo_model(image)
+        # Run inference on the resized image (preprocessed_image)
+        results = self.yolo_model(preprocessed_image)
 
         # Ensure results is a single item (handles batch outputs)
         if isinstance(results, list):
@@ -30,16 +34,32 @@ class ObjectRemovalPipeline:
 
         # Extract bounding boxes, confidence scores, and class IDs
         boxes = results.boxes
-        box_coords = boxes.xyxy.cpu().numpy()
+        box_coords = boxes.xyxy.cpu().numpy()  # Bounding boxes in the resized image size
         confidences = boxes.conf.cpu().numpy()
         class_ids = boxes.cls.cpu().numpy().astype(int)
         class_names = [self.yolo_model.names[id] for id in class_ids]
 
-        # Draw bounding boxes and labels on the image
-        detected_image = image.copy()
+        # Get dimensions of the resized and original images
+        resized_height, resized_width = preprocessed_image.shape[:2]
+        orig_height, orig_width = original_image.shape[:2]
+
+        # Calculate scaling factors
+        scale_x = orig_width / resized_width
+        scale_y = orig_height / resized_height
+
+        # Generate random colors for each class for better visibility
+        unique_classes = set(class_names)
+        class_colors = {cls: [random.randint(0, 255) for _ in range(3)] for cls in unique_classes}
+
+        # Draw bounding boxes on the original image
+        detected_image = original_image.copy()
         detections = []
+
         for coord, conf, class_name in zip(box_coords, confidences, class_names):
-            xmin, ymin, xmax, ymax = map(int, coord)
+            # Scale the bounding box coordinates to the original image size
+            xmin, ymin, xmax, ymax = map(int, [coord[0] * scale_x, coord[1] * scale_y, coord[2] * scale_x, coord[3] * scale_y])
+
+            # Store detection information
             detections.append({
                 "class_name": class_name,
                 "confidence": conf,
@@ -48,70 +68,117 @@ class ObjectRemovalPipeline:
                 "xmax": xmax,
                 "ymax": ymax,
             })
-            # Draw bounding box and label for each detection
-            cv2.rectangle(detected_image, (xmin, ymin), (xmax, ymax), (0, 255, 0), 2)
-            label = f"{class_name} ({conf:.2f})"
-            cv2.putText(detected_image, label, (xmin, ymin - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
 
-        # Display all detected objects using matplotlib
-        plt.imshow(cv2.cvtColor(detected_image, cv2.COLOR_BGR2RGB))
-        plt.axis('off')
-        plt.title("Detected Objects")
-        plt.show()
+            # Draw bounding box and label on the original image
+            color = class_colors[class_name]
+            cv2.rectangle(detected_image, (xmin, ymin), (xmax, ymax), color, 2)
+            label = f"{class_name} ({conf:.2f})"
+            cv2.putText(detected_image, label, (xmin, ymin - 10), cv2.FONT_HERSHEY_SIMPLEX, 2, color, 2)
 
         return detections, detected_image
 
-    def inpaint_image(self, image, mask, prompt="a clean background"):
+
+
+
+    def inpaint_image(self, image, mask, prompt="blend with environment"):
         if self.inpaint_method == "stable-diffusion":
-            print("Using Stable Diffusion for inpainting...")
+            print("Using OpenCV for initial inpainting to guide Stable Diffusion...")
             try:
+                # Perform initial inpainting with OpenCV
+                opencv_inpainted = cv2.inpaint(image, mask, inpaintRadius=3, flags=cv2.INPAINT_TELEA)
+
+                # Get the bounding box coordinates for the mask with padding
                 y_indices, x_indices = np.where(mask == 255)
                 if len(y_indices) == 0 or len(x_indices) == 0:
                     raise ValueError("Mask is empty. Nothing to inpaint.")
 
-                ymin, ymax = y_indices.min(), y_indices.max()
-                xmin, xmax = x_indices.min(), x_indices.max()
+                padding = 20  # Add padding to include surrounding context
+                ymin = max(0, y_indices.min() - padding)
+                ymax = min(image.shape[0], y_indices.max() + padding)
+                xmin = max(0, x_indices.min() - padding)
+                xmax = min(image.shape[1], x_indices.max() + padding)
 
-                cropped_image = image[ymin:ymax, xmin:xmax]
+                # Crop the region of interest from the OpenCV inpainted image and the mask
+                cropped_image = opencv_inpainted[ymin:ymax, xmin:xmax]
                 cropped_mask = mask[ymin:ymax, xmin:xmax]
 
-                # Convert to PIL format
-                cropped_image_pil = Image.fromarray(cropped_image)
-                cropped_mask_pil = Image.fromarray(cropped_mask)
+                # Resize to 512x512 for Stable Diffusion
+                fixed_size = (512, 512)
+                cropped_image_resized = cv2.resize(cropped_image, fixed_size, interpolation=cv2.INTER_LINEAR)
+                cropped_mask_resized = cv2.resize(cropped_mask, fixed_size, interpolation=cv2.INTER_NEAREST)
 
-                inpainted_cropped = self.sd_pipeline(
+                # Convert to PIL format
+                cropped_image_pil = Image.fromarray(cv2.cvtColor(cropped_image_resized, cv2.COLOR_BGR2RGB))
+                cropped_mask_pil = Image.fromarray(cropped_mask_resized)
+
+                # Inpaint with Stable Diffusion
+                print("Refining inpainting with Stable Diffusion...")
+                inpainted_result = self.sd_pipeline(
                     prompt=prompt,
                     image=cropped_image_pil,
                     mask_image=cropped_mask_pil,
-                    num_inference_steps=100,
+                    num_inference_steps=20,
                     guidance_scale=10
                 ).images[0]
 
-                inpainted_cropped_np = np.array(inpainted_cropped)
+                # Convert the inpainted result back to a NumPy array
+                inpainted_cropped_np = np.array(inpainted_result)
+
+                # Resize the inpainted result back to the original crop size
+                inpainted_cropped_resized = cv2.resize(inpainted_cropped_np, (xmax - xmin, ymax - ymin), interpolation=cv2.INTER_LINEAR)
+
+                # Apply the refined inpainted result to the original image
                 result = image.copy()
-                result[ymin:ymax, xmin:xmax][cropped_mask == 255] = inpainted_cropped_np[cropped_mask == 255]
+                result[ymin:ymax, xmin:xmax][cropped_mask == 255] = inpainted_cropped_resized[cropped_mask == 255]
 
                 return result
 
             except Exception as e:
                 raise RuntimeError(f"Inpainting with Stable Diffusion failed: {e}")
 
-        elif self.inpaint_method == "opencv":
-            print("Using OpenCV for inpainting...")
-            inpainted_result = cv2.inpaint(image, mask, inpaintRadius=3, flags=cv2.INPAINT_TELEA)
-            result = image.copy()
-            result[mask == 255] = inpainted_result[mask == 255]
-            return result
-
         else:
             raise ValueError(f"Unknown inpainting method: {self.inpaint_method}")
 
-    def process(self, image_path, target_object, prompt):
-        print("Starting the object removal pipeline...")
-        original_image, preprocessed_image = preprocess_image(image_path)
 
-        # Detect all objects
-        detections, detected_image = self.detect_objects(preprocessed_image)
+
+
+
+
+    def process(self, image_path, target_object, prompt, output_file="detections.txt"):
+        print(f"Starting the object removal pipeline for {image_path}...")
+
+        # Preprocess the image and get the original image and resized image
+        original_image, preprocessed_image, original_size = preprocess_image(image_path)
+
+        # Detect all objects and get the detected image with bounding boxes
+        detections, detected_image = self.detect_objects(preprocessed_image, original_image)
+
+        # Get the image file name (e.g., "xyz.jpeg")
+        image_name = os.path.basename(image_path)
+
+        # Save detections to the text file
+        with open(output_file, "a") as f:
+            f.write(f"{image_name} =\n")
+            if not detections:
+                f.write("No objects detected.\n")
+            else:
+                for detection in detections:
+                    class_name = detection['class_name']
+                    xmin, ymin, xmax, ymax = detection['xmin'], detection['ymin'], detection['xmax'], detection['ymax']
+                    f.write(f"Detected {class_name} at ({xmin}, {ymin}, {xmax}, {ymax})\n")
+            f.write("\n")
+
+        # Display the detected image with bounding boxes if DISPLAY_DETECTION is True
+        if DISPLAY_DETECTION:
+            plt.imshow(cv2.cvtColor(detected_image, cv2.COLOR_BGR2RGB))
+            plt.axis('off')
+            plt.title("Detected Objects")
+            plt.show()
+
+        # Skip inpainting if ENABLE_INPAINTING is False
+        if not ENABLE_INPAINTING:
+            print(f"Skipping inpainting for {image_name}. Object detection complete.")
+            return detected_image
 
         # Create a mask only for the target object
         target_detections = [det for det in detections if det["class_name"] == target_object]
@@ -121,10 +188,10 @@ class ObjectRemovalPipeline:
             return original_image
 
         # Create a mask for the target object only
-        mask = create_mask(preprocessed_image, target_detections)
+        mask = create_mask(original_image, target_detections)
 
         # Inpaint the image
-        inpainted_image = self.inpaint_image(preprocessed_image, mask, prompt)
+        inpainted_image = self.inpaint_image(original_image, mask, prompt)
 
         # Postprocess and display the result
         final_image = postprocess_image(original_image, inpainted_image)

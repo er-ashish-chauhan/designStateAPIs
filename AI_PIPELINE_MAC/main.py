@@ -7,7 +7,7 @@ if __name__ == "__main__":
     pipeline = ObjectRemovalPipeline(device="cpu")  # Token is automatically loaded from the environment
 
     # macOS-compatible file path
-    image_path = "./images/pexels-houzlook-3797991.jpg"
+    image_path = "./images/interior-with-sofa.jpg"
 
     # Process the image
     result = pipeline.process(
