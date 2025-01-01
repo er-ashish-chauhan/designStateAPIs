@@ -12,6 +12,8 @@ const ProjectGroups = require('./models/ProjectGroups');
 const ProjectImages = require('./models/ProjectImages');
 const Projects = require('./models/Projects');
 const UserGallery = require('./models/UserGallery');
+const Products = require('./models/Products');
+const WishlistedItems = require('./models/WishlistedItems');
 const cors = require('cors');
 
 const app = express();

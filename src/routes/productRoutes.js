@@ -9,4 +9,12 @@ const router = express.Router();
 
 router.get('/categories', authenticateToken, productController.getCategories);
 
+router.post('/insertProducts', authenticateToken, productController.insertProducts);
+
+router.get('/', authenticateToken, productController.getProducts);
+
+router.post('/addWishlist', authenticateToken, productController.wishlistProduct);
+
+router.get('/wishlistItems', authenticateToken, productController.getWishlistItems);
+
 module.exports = router;

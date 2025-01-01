@@ -13,7 +13,7 @@ exports.getAllGroups = async (req, res) => {
         });
 
         if (groups.length === 0) {
-            return res.status(404).json(formatResponse(null, "No project groups exist.", false));
+            return res.status(200).json(formatResponse(null, "No project groups exist.", false));
         }
 
         // Fetch the last updated project for each group and the total number of projects in each group
@@ -154,7 +154,7 @@ exports.getProjectsByGroup = async (req, res) => {
         // If group doesn't exist or is marked as deleted
         if (!group) {
             return res
-                .status(404)
+                .status(200)
                 .json(formatResponse(null, "Project group not found.", false));
         }
 
@@ -331,14 +331,14 @@ exports.getImagesForProject = async (req, res) => {
 
         // Validate projectId
         if (!projectId) {
-            return res.status(400).json({ success: false, message: 'Project ID is required' });
+            return res.status(400).json(formatResponse(null, 'Project ID is required', false));
         }
 
         // Find the project to ensure it exists
         const project = await Projects.findByPk(projectId);
-
+        
         if (!project) {
-            return res.status(404).json({ success: false, message: 'Project not found' });
+            return res.status(404).json(formatResponse(null, 'Project not found', false));
         }
 
         // Get all images for the project where deleted = false
@@ -355,7 +355,7 @@ exports.getImagesForProject = async (req, res) => {
         });
 
         if (images.length === 0) {
-            return res.status(404).json({ success: false, message: 'No images found for this project' });
+            return res.status(200).json(formatResponse(null, 'No images found for this project', false));
         }
 
         // Prepare the response with project images and user gallery URLs
@@ -368,15 +368,11 @@ exports.getImagesForProject = async (req, res) => {
         });
 
         // Return the images
-        return res.status(200).json({
-            success: true,
-            message: 'Images fetched successfully',
-            data: responseData,
-        });
+        return res.status(200).json(formatResponse(responseData, 'Images fetched successfully', true));
 
     } catch (error) {
         console.error('Error fetching project images:', error);
-        return res.status(500).json({ success: false, message: 'Failed to fetch images', error: error.message });
+        return res.status(500).json(formatResponse(null, 'Failed to fetch images', false));
     }
 };
 
