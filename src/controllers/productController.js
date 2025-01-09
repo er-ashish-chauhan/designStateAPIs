@@ -150,7 +150,7 @@ exports.getProducts = async (req, res) => {
     try {
         const { categoryId } = req.query; // Get categoryId from query parameters
         const userId = req.user.id; // Get userId from authenticated user
-        
+
         // Base query options
         const queryOptions = {
             include: [{
@@ -194,7 +194,7 @@ exports.getProducts = async (req, res) => {
         console.error(error);
         res.status(500).json(formatResponse(null, 'An error occurred while fetching products.'));
     }
-};                                                      
+};
 
 exports.wishlistProduct = async (req, res) => {
     try {
@@ -207,7 +207,7 @@ exports.wishlistProduct = async (req, res) => {
         }
 
         // Check if product exists
-        const product = await Products.findOne({ 
+        const product = await Products.findOne({
             where: { id: productId, deleted: false }
         });
         if (!product) {
@@ -216,14 +216,15 @@ exports.wishlistProduct = async (req, res) => {
 
         // Check if item is already in wishlist
         const existingWishlistItem = await WishlistedItems.findOne({
-            where: { 
+            where: {
                 userId,
-                productId
+                productId,
+                deleted: false
             }
         });
 
         if (existingWishlistItem) {
-            return res.status(400).json(formatResponse(null, 'Product is already in your wishlist.', false));
+            return res.status(200).json(formatResponse(null, 'Product is already in your wishlist.', false));
         }
 
         // Create new wishlist item
@@ -241,10 +242,11 @@ exports.wishlistProduct = async (req, res) => {
     }
 };
 
+// get wishlist items API
 exports.getWishlistItems = async (req, res) => {
     try {
         const userId = req.user.id; // Extracted from token
-        
+
         if (!userId) {
             return res.status(400).json(formatResponse(null, 'User ID is required.', false));
         }
@@ -266,7 +268,7 @@ exports.getWishlistItems = async (req, res) => {
         const transformedWishlist = wishlistItems.map(item => {
             const plainItem = item.get({ plain: true });
             const { Product, deleted, updatedAt, ...wishlistDetails } = plainItem;
-            
+
             return {
                 ...wishlistDetails,
                 ...Product,
@@ -283,3 +285,103 @@ exports.getWishlistItems = async (req, res) => {
         res.status(500).json(formatResponse(null, 'An error occurred while fetching wishlist items.', false));
     }
 };
+
+// remove from wishlist API
+exports.removeFromWishlist = async (req, res) => {
+    try {
+        const userId = req.user.id; // Extracted from token
+        const { productId } = req.params;
+
+        // Validate inputs
+        if (!productId || !userId) {
+            return res.status(400).json(formatResponse(null, 'Product ID and User ID are required.', false));
+        }
+
+        // Find the wishlist item
+        const wishlistItem = await WishlistedItems.findOne({
+            where: {
+                userId,
+                productId,
+                deleted: false
+            }
+        });
+
+        if (!wishlistItem) {
+            return res.status(404).json(formatResponse(null, 'Item not found in wishlist.', false));
+        }
+
+        // Mark as deleted
+        await wishlistItem.update({ deleted: true });
+
+        res.status(200).json(formatResponse({ productId }, 'Product removed from wishlist successfully!', true));
+    } catch (error) {
+        console.error(error);
+        res.status(500).json(formatResponse(null, 'An error occurred while removing the product from wishlist.', false));
+    }
+};
+
+// update product API
+exports.updateProduct = async (req, res) => {
+    try {
+        const { productId } = req.params;
+        const updateData = req.body;
+
+        // Find the product
+        const product = await Products.findOne({
+            where: {
+                id: productId,
+                deleted: false
+            }
+        });
+
+        if (!product) {
+            return res.status(404).json(formatResponse(null, 'Product not found.', false));
+        }
+
+        // List of allowed fields to update
+        const allowedFields = [
+            'name', 'type', 'dimensionsUnit', 'dimensions',
+            'color', 'material', 'price', 'brand', 'features',
+            'weight', 'imageUrl', 'warranty', 'rating', 'reviews',
+            'availability', 'tags', 'customizationOptions',
+            'shippingDimensions', 'shippingWeight', 'deliveryTime',
+            'ecoFriendly', 'careInstructions', 'discount',
+            'bundleOffers', 'faq', 'countryOfOrigin', 'categoryId'
+        ];
+
+        // Filter out any fields that aren't in the allowed list
+        const filteredUpdateData = Object.keys(updateData)
+            .filter(key => allowedFields.includes(key)) 
+            .reduce((obj, key) => {
+                obj[key] = updateData[key];
+                return obj;
+            }, {});
+
+        // Update the product
+        await product.update(filteredUpdateData);
+
+        // Fetch the updated product
+        const updatedProduct = await Products.findOne({
+            where: { id: productId },
+            include: [{
+                model: ProductCategory,
+                attributes: ['name'],
+                where: { deleted: false }
+            }]
+        });
+
+        // Transform the response
+        const { deleted, ...productData } = updatedProduct.get({ plain: true });
+        const transformedProduct = {
+            ...productData,
+            categoryName: productData.ProductCategory?.name,
+            ProductCategory: undefined
+        };
+
+        res.status(200).json(formatResponse(transformedProduct, 'Product updated successfully!'));
+    } catch (error) {
+        console.error(error);
+        res.status(500).json(formatResponse(null, 'An error occurred while updating the product.', false));
+    }
+};
+

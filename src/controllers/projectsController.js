@@ -1,6 +1,6 @@
 const { default: axios } = require('axios');
 const sequelize = require('../config/db');
-const { Projects, ProjectGroups, ProjectImages, UserGallery } = require('../models/associations');
+const { Projects, ProjectGroups, ProjectImages, UserGallery, UnityProgress } = require('../models/associations');
 
 const { formatResponse } = require('../utils/formatResponse');
 
@@ -380,6 +380,126 @@ exports.getImagesForProject = async (req, res) => {
     } catch (error) {
         console.error('Error fetching project images:', error);
         return res.status(500).json(formatResponse(null, 'Failed to fetch images', false));
+    }
+};
+
+// save unity progress API
+exports.saveUnityProgress = async (req, res) => {
+    try {
+        const { projectId, modelPlacements, status = "active" } = req.body;
+        const userId = req.user.id;
+
+        if (!projectId || !modelPlacements) {
+            return res.status(200).json(formatResponse(null, 'Project ID and model placements are required.', false));
+        }
+
+        let newUnityProgress;
+
+        if (Array.isArray(modelPlacements)) {
+            // Handle multiple model placements
+            newUnityProgress = await UnityProgress.bulkCreate(
+                modelPlacements.map(placement => ({
+                    projectId,
+                    userId,
+                    modelPlacements: placement,
+                    status
+                }))
+            );
+
+            // Transform the response to remove 'deleted' field from each entry
+            const responseData = newUnityProgress.map(progress => {
+                const { deleted, ...data } = progress.toJSON();
+                return data;
+            });
+
+            res.status(201).json(formatResponse(responseData, 'Multiple unity progress entries saved successfully.', true));
+        } else {
+            // Handle single model placement
+            newUnityProgress = await UnityProgress.create({
+                projectId,
+                userId,
+                modelPlacements,
+                status
+            });
+
+            const { deleted, ...responseData } = newUnityProgress.toJSON();
+            res.status(201).json(formatResponse(responseData, 'Unity progress saved successfully.', true));
+        }
+    } catch (error) {
+        console.error('Error saving unity progress:', error);
+        res.status(500).json(formatResponse(null, 'Failed to save unity progress', false));
+    }
+};
+
+// get unity progress API
+exports.getUnityProgress = async (req, res) => {
+    try {
+        const { projectId } = req.params;
+
+        // Get project details including the latest image
+        const projectDetails = await Projects.findOne({
+            where: { 
+                id: projectId,
+                deleted: false 
+            },
+            attributes: ['id', 'projectGroupId', 'name', 'type', 'updatedAt'],
+            include: [
+                {
+                    model: ProjectImages,
+                    as: 'images',
+                    where: { deleted: false },
+                    required: false,
+                    attributes: ['id', 'imageId', 'dimensions', 'type'],
+                    include: [
+                        {
+                            model: UserGallery,
+                            as: 'userGallery',
+                            attributes: ['imageUrl'],
+                        }
+                    ],
+                    limit: 1,
+                    order: [['updatedAt', 'DESC']] // Get the most recently updated image
+                }
+            ]
+        });
+
+        if (!projectDetails) {
+            return res.status(404).json(formatResponse(null, 'Project not found.', false));
+        }
+
+        // Get unity progress data
+        const unityProgress = await UnityProgress.findAll({ 
+            attributes: ['id', 'projectId', 'userId', 'modelPlacements', 'status', 'createdAt'],
+            where: { 
+                projectId,
+                deleted: false 
+            },
+            order: [['createdAt', 'DESC']]
+        });
+
+        // Transform project details to include the latest image URL
+        const transformedProject = {
+            ...projectDetails.toJSON(),
+            image: projectDetails.images?.[0] ? {
+                id: projectDetails.images[0].id,
+                imageId: projectDetails.images[0].imageId,
+                dimensions: projectDetails.images[0].dimensions,
+                type: projectDetails.images[0].type,
+                imageUrl: projectDetails.images[0].userGallery?.imageUrl || null
+            } : null,
+            images: undefined // Remove the images array since we're using a single image
+        };
+
+        // Prepare the final response
+        const response = {
+            projectDetails: transformedProject,
+            sessionData: unityProgress
+        };
+
+        res.status(200).json(formatResponse(response, 'Unity progress and project details fetched successfully.', true));
+    } catch (error) {
+        console.error('Error fetching unity progress:', error);
+        res.status(500).json(formatResponse(null, 'Failed to fetch unity progress', false));
     }
 };
 

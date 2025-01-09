@@ -24,4 +24,10 @@ router.post('/saveProjectImages', authenticateToken, projectsController.saveProj
 // Route for get project images
 router.get('/getProjectImages/:projectId', authenticateToken, projectsController.getImagesForProject);
 
+// Route for save unity progress
+router.post('/saveUnityProgress', authenticateToken, projectsController.saveUnityProgress);
+
+// Route for get unity progress
+router.get('/getUnityProgress/:projectId', authenticateToken, projectsController.getUnityProgress);
+
 module.exports = router;

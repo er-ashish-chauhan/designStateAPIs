@@ -17,4 +17,8 @@ router.post('/addWishlist', authenticateToken, productController.wishlistProduct
 
 router.get('/wishlistItems', authenticateToken, productController.getWishlistItems);
 
+router.delete('/wishlistItems/:productId', authenticateToken, productController.removeFromWishlist);
+
+router.put('/updateProduct/:productId', authenticateToken, productController.updateProduct);
+
 module.exports = router;

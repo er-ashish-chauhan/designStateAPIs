@@ -114,7 +114,7 @@ exports.getUserGalleryImages = async (req, res) => {
       const totalPages = Math.ceil(totalImages / pageSize); // Calculate total pages
 
       if (images.length === 0) {  
-          return res.status(404).json(formatResponse(null, 'No images found for this user.', false));
+          return res.status(200).json(formatResponse(null, 'No images found for this user.', false));
       }
 
       // Return paginated data with metadata
@@ -142,7 +142,7 @@ exports.deleteImageFromGallery = async (req, res) => {
 
       // Validate imageId
       if (!imageId) {
-          return res.status(400).json(formatResponse(null, 'Image ID is required', false));
+          return res.status(200).json(formatResponse(null, 'Image ID is required', false));
       }
 
       // Check if the image exists in ProjectImages and is not marked as deleted
@@ -154,14 +154,14 @@ exports.deleteImageFromGallery = async (req, res) => {
       });
 
       if (projectImage) {
-          return res.status(400).json(formatResponse(null, 'Image is in use for a project and cannot be deleted.', false));
+          return res.status(200).json(formatResponse(null, 'Image is in use for a project and cannot be deleted.', false));
       }
 
       // Find the image in UserGallery
       const userGalleryImage = await UserGallery.findByPk(imageId);
 
       if (!userGalleryImage) {
-          return res.status(404).json(formatResponse(null, 'Image not found in gallery!', false));
+          return res.status(200).json(formatResponse(null, 'Image not found in gallery!', false));
       }
 
       // Delete the image from S3 bucket

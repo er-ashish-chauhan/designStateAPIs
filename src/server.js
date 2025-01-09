@@ -14,6 +14,7 @@ const Projects = require('./models/Projects');
 const UserGallery = require('./models/UserGallery');
 const Products = require('./models/Products');
 const WishlistedItems = require('./models/WishlistedItems');
+const UnityProgress = require('./models/UnityProgress');
 const cors = require('cors');
 
 const app = express();

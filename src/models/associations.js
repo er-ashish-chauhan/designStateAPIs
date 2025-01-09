@@ -1,6 +1,7 @@
 const ProjectGroups = require('./ProjectGroups');
 const ProjectImages = require('./ProjectImages');
 const Projects = require('./Projects');
+const UnityProgress = require('./UnityProgress');
 const UserGallery = require('./UserGallery');
 
 // Define associations
@@ -14,4 +15,8 @@ ProjectImages.belongsTo(Projects, { foreignKey: 'projectId', as: 'project' });
 // ProjectImages <-> UserGallery (Link through imageId)
 ProjectImages.belongsTo(UserGallery, { foreignKey: 'imageId', as: 'userGallery' });
 
-module.exports = { ProjectGroups, Projects, ProjectImages, UserGallery };
+// Projects <-> UnityProgress (Link through projectId)
+Projects.hasMany(UnityProgress, { foreignKey: 'projectId', as: 'unityProgress' });
+UnityProgress.belongsTo(Projects, { foreignKey: 'projectId', as: 'project' });
+
+module.exports = { ProjectGroups, Projects, ProjectImages, UserGallery, UnityProgress };
