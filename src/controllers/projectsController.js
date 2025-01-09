@@ -1,3 +1,4 @@
+const { default: axios } = require('axios');
 const sequelize = require('../config/db');
 const { Projects, ProjectGroups, ProjectImages, UserGallery } = require('../models/associations');
 
@@ -313,6 +314,12 @@ exports.saveProjectImage = async (req, res) => {
             dimensions: image.dimensions,
         });
 
+        const getImageUrl = await UserGallery.findOne({ where: { id: image.imageId } });
+        // console.log("getImageUrl...", getImageUrl);
+        const imageUrl = getImageUrl.imageUrl;
+        // process image
+        processImage(imageUrl);
+
         await updateProjectAction(image.projectId, "image_added");
 
         // Remove the `deleted` field before sending response
@@ -336,7 +343,7 @@ exports.getImagesForProject = async (req, res) => {
 
         // Find the project to ensure it exists
         const project = await Projects.findByPk(projectId);
-        
+
         if (!project) {
             return res.status(404).json(formatResponse(null, 'Project not found', false));
         }
@@ -406,3 +413,18 @@ const updateProjectAction = async (projectId, lastAction) => {
     }
 };
 
+// process image
+const processImage = async (image) => {
+    const url = process.env.AWS_IMAGE_BASE_URL + image; // Construct full image URL
+    console.log("url", url);
+    try {
+        // Send the image URL to the Flask server
+        const response = await axios.post(`http://${process.env.HOST}:3000/process-image`, {
+            image_url: url
+        });
+
+        console.log('Server Response:', response.data); // Log the response from Flask server
+    } catch (error) {
+        console.error('Error sending image URL to Flask:', error, `http://${process.env.HOST}:3000/process-image`);
+    }
+};
