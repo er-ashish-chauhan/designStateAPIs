@@ -1,0 +1,104 @@
+{
+    "image_name": "interior-has-sofa-armchair-empty-dark-wall-background-3d-rendering.jpg",
+    "detections": [
+        {
+            "class_name": "chair",
+            "bbox": {
+                "xmin": 4405,
+                "ymin": 2306,
+                "xmax": 5600,
+                "ymax": 3314
+            }
+        },
+        {
+            "class_name": "couch",
+            "bbox": {
+                "xmin": 1572,
+                "ymin": 2181,
+                "xmax": 4165,
+                "ymax": 3095
+            }
+        },
+        {
+            "class_name": "potted plant",
+            "bbox": {
+                "xmin": 971,
+                "ymin": 1903,
+                "xmax": 1663,
+                "ymax": 3055
+            }
+        },
+        {
+            "class_name": "potted plant",
+            "bbox": {
+                "xmin": 5100,
+                "ymin": 1682,
+                "xmax": 5735,
+                "ymax": 2743
+            }
+        },
+        {
+            "class_name": "vase",
+            "bbox": {
+                "xmin": 4593,
+                "ymin": 2187,
+                "xmax": 4806,
+                "ymax": 2374
+            }
+        },
+        {
+            "class_name": "vase",
+            "bbox": {
+                "xmin": 4354,
+                "ymin": 2171,
+                "xmax": 4502,
+                "ymax": 2340
+            }
+        },
+        {
+            "class_name": "potted plant",
+            "bbox": {
+                "xmin": 283,
+                "ymin": 2273,
+                "xmax": 830,
+                "ymax": 2813
+            }
+        },
+        {
+            "class_name": "potted plant",
+            "bbox": {
+                "xmin": 4595,
+                "ymin": 2105,
+                "xmax": 4812,
+                "ymax": 2375
+            }
+        },
+        {
+            "class_name": "vase",
+            "bbox": {
+                "xmin": 405,
+                "ymin": 2589,
+                "xmax": 632,
+                "ymax": 2815
+            }
+        },
+        {
+            "class_name": "vase",
+            "bbox": {
+                "xmin": 1170,
+                "ymin": 2750,
+                "xmax": 1486,
+                "ymax": 3058
+            }
+        },
+        {
+            "class_name": "potted plant",
+            "bbox": {
+                "xmin": 1,
+                "ymin": 1540,
+                "xmax": 264,
+                "ymax": 2956
+            }
+        }
+    ]
+},

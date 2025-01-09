@@ -1,27 +1,31 @@
 from pipeline.object_removal import ObjectRemovalPipeline
 from PIL import Image
 import numpy as np
-import matplotlib.pyplot as plt  # For macOS-compatible image display
+import json
+import sys
+from io import BytesIO
 
 if __name__ == "__main__":
-    pipeline = ObjectRemovalPipeline(device="cpu")  # Token is automatically loaded from the environment
+    # Read image data from stdin
+    image_data = sys.stdin.buffer.read()
+    image = Image.open(BytesIO(image_data))
 
-    # macOS-compatible file path
-    image_path = "./images/interior-with-sofa.jpg"
+    # Initialize the pipeline
+    pipeline = ObjectRemovalPipeline(device="cpu")
 
     # Process the image
-    result = pipeline.process(
-        image_path=image_path,
+    detection_results = pipeline.process(
+        image_path=None,  # No path, directly pass the image
         target_object="couch",
-        prompt="a clean background with no furniture"
+        prompt="Fill the area with matching patterns from the surroundings."
     )
 
-    # Ensure the result is a NumPy array
-    if isinstance(result, Image.Image):
-        result = np.array(result)
+    # Example: Simulate detection results (replace this with actual pipeline results)
+    results = {
+        "detected_objects": [
+            {"label": "couch", "confidence": 0.95, "bbox": [100, 200, 300, 400]}
+        ]
+    }
 
-    # Display the result using matplotlib
-    plt.imshow(result)
-    plt.axis('off')
-    plt.title("Result")
-    plt.show()
+    # Output the results as JSON
+    print(json.dumps(results))

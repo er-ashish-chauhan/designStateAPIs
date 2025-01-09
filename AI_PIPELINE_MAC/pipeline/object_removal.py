@@ -9,7 +9,7 @@ import matplotlib.pyplot as plt  # For macOS-compatible image display
 from config import DISPLAY_DETECTION, ENABLE_INPAINTING
 import os
 import matplotlib.pyplot as plt
-import random
+import random,json
 
 
 class ObjectRemovalPipeline:
@@ -144,7 +144,7 @@ class ObjectRemovalPipeline:
 
 
 
-    def process(self, image_path, target_object, prompt, output_file="detections.txt"):
+    def process(self, image_path, target_object, prompt, output_file="detections.json"):
         print(f"Starting the object removal pipeline for {image_path}...")
 
         # Preprocess the image and get the original image and resized image
@@ -156,17 +156,31 @@ class ObjectRemovalPipeline:
         # Get the image file name (e.g., "xyz.jpeg")
         image_name = os.path.basename(image_path)
 
-        # Save detections to the text file
+        # Create a dictionary to store the detections
+        detection_data = {
+            "image_name": image_name,
+            "detections": []
+        }
+
+        if not detections:
+            print("No objects detected.")
+        else:
+            for detection in detections:
+                detection_entry = {
+                    "class_name": detection['class_name'],
+                    "bbox": {
+                        "xmin": detection['xmin'],
+                        "ymin": detection['ymin'],
+                        "xmax": detection['xmax'],
+                        "ymax": detection['ymax']
+                    }
+                }
+                detection_data["detections"].append(detection_entry)
+
+        # Save detections to a JSON file
         with open(output_file, "a") as f:
-            f.write(f"{image_name} =\n")
-            if not detections:
-                f.write("No objects detected.\n")
-            else:
-                for detection in detections:
-                    class_name = detection['class_name']
-                    xmin, ymin, xmax, ymax = detection['xmin'], detection['ymin'], detection['xmax'], detection['ymax']
-                    f.write(f"Detected {class_name} at ({xmin}, {ymin}, {xmax}, {ymax})\n")
-            f.write("\n")
+            f.write(json.dumps(detection_data, indent=4))
+            f.write(",\n")  # To separate entries if appending multiple images
 
         # Display the detected image with bounding boxes if DISPLAY_DETECTION is True
         if DISPLAY_DETECTION:
@@ -178,7 +192,7 @@ class ObjectRemovalPipeline:
         # Skip inpainting if ENABLE_INPAINTING is False
         if not ENABLE_INPAINTING:
             print(f"Skipping inpainting for {image_name}. Object detection complete.")
-            return detected_image
+            return detection_data  # Return detections as JSON-like dictionary
 
         # Create a mask only for the target object
         target_detections = [det for det in detections if det["class_name"] == target_object]

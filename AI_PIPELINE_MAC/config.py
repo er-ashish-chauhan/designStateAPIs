@@ -13,6 +13,6 @@ DISPLAY_DETECTION = True # Set to False to disable detection visualization
 # Hugging Face API token
 HF_TOKEN = "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"
 
-ENABLE_INPAINTING = True
+ENABLE_INPAINTING = False
 # Inpainting method: "opencv" or "stable-diffusion"
 INPAINT_METHOD = "stable-diffusion"
