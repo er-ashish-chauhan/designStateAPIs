@@ -1,35 +1,54 @@
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 from subprocess import call
-import requests  # For downloading the image from the URL
+import requests
 import os
 
 app = Flask(__name__)
+CORS(app)
 
 @app.route('/process-image', methods=['POST'])
 def process_image():
     try:
-        # Get the image URL from the request JSON
         data = request.json
         image_url = data['image_url']
-        print(image_url)
-        # Download the image from the URL
+        print(f"Received image URL: {image_url}")
+
+        # Download the image
         response = requests.get(image_url)
-        response.raise_for_status()  # Raise an error if the request failed
-        image_data = response.content
-
-        # Save the image locally (optional) or pass it to main.py
-        image_path = 'temp_image.jpg'  # Temporary file
+        response.raise_for_status()
+        
+        # Save the image
+        image_path = 'temp_image.jpg'
         with open(image_path, 'wb') as f:
-            f.write(image_data)
-        print("image_path", image_path)
-        # Start main.py with the image path as a parameter
-        call(["python", "main.py", image_path])
-
-        return jsonify({"status": "success", "message": "Image processed successfully."})
+            f.write(response.content)
+        
+        print(f"Saved image to: {image_path}")
+        
+        # Process the image
+        result = call(["python3", "main.py", 'temp_image.jpg'])
+        
+        if result == 0:
+            return jsonify({
+                "status": "success",
+                "message": "Image processed successfully.",
+                "data": ""
+            })
+        else:
+            return jsonify({
+                "status": "error",
+                "message": f"Image processing failed with exit code: {result}"
+            })
 
     except Exception as e:
-        return jsonify({"status": "error", "message": str(e)})
+        print(f"Error processing image: {str(e)}")
+        return jsonify({
+            "status": "error",
+            "message": str(e)
+        }), 500
 
 if __name__ == '__main__':
-    port = int(os.environ.get('PORT', 3000))  # Default to 3000 if PORT not set
-    app.run(debug=True, host=os.environ.get('HOST', 'localhost'), port=port)
+    port = int(os.environ.get('FLASK_PORT', 3001))
+    host = os.environ.get('HOST', 'localhost')
+    print(f"Starting Flask server on {host}:{port}")
+    app.run(debug=True, host=host, port=port)

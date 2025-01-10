@@ -8,7 +8,7 @@ SD_MODEL_PATH = "stabilityai/stable-diffusion-2-inpainting"
 DEFAULT_DEVICE = "cpu"
 
 # Enable or disable detection display
-DISPLAY_DETECTION = True # Set to False to disable detection visualization
+DISPLAY_DETECTION = False # Set to False to disable detection visualization
 
 # Hugging Face API token
 HF_TOKEN = "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"

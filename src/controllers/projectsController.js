@@ -318,7 +318,10 @@ exports.saveProjectImage = async (req, res) => {
         // console.log("getImageUrl...", getImageUrl);
         const imageUrl = getImageUrl.imageUrl;
         // process image
-        processImage(imageUrl);
+        const isImageProcessed = await processImage(imageUrl);
+        if (!isImageProcessed) {
+            return res.status(500).json(formatResponse(null, 'Failed to process image', false));
+        }
 
         await updateProjectAction(image.projectId, "image_added");
 
@@ -438,9 +441,9 @@ exports.getUnityProgress = async (req, res) => {
 
         // Get project details including the latest image
         const projectDetails = await Projects.findOne({
-            where: { 
+            where: {
                 id: projectId,
-                deleted: false 
+                deleted: false
             },
             attributes: ['id', 'projectGroupId', 'name', 'type', 'updatedAt'],
             include: [
@@ -468,11 +471,11 @@ exports.getUnityProgress = async (req, res) => {
         }
 
         // Get unity progress data
-        const unityProgress = await UnityProgress.findAll({ 
+        const unityProgress = await UnityProgress.findAll({
             attributes: ['id', 'projectId', 'userId', 'modelPlacements', 'status', 'createdAt'],
-            where: { 
+            where: {
                 projectId,
-                deleted: false 
+                deleted: false
             },
             order: [['createdAt', 'DESC']]
         });
@@ -536,15 +539,38 @@ const updateProjectAction = async (projectId, lastAction) => {
 // process image
 const processImage = async (image) => {
     const url = process.env.AWS_IMAGE_BASE_URL + image; // Construct full image URL
-    console.log("url", url);
+    console.log("Processing image URL:", url);
+
     try {
+        // Configure the request to the Flask server
+        const flaskServerUrl = `http://${process.env.FLASK_HOST || 'localhost'}:${process.env.FLASK_PORT || 3001}/process-image`;
+        console.log("Flask server URL:", flaskServerUrl);
         // Send the image URL to the Flask server
-        const response = await axios.post(`http://${process.env.HOST}:3000/process-image`, {
+        const response = await axios.post(flaskServerUrl, {
             image_url: url
+        }, {
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            // Add timeout to prevent hanging
+            timeout: 30000 // 30 seconds
         });
 
-        console.log('Server Response:', response.data); // Log the response from Flask server
+        if (response.data.status === 'success') {
+            console.log('Image processing successful:', response.data.message);
+            return true;
+        } else {
+            console.error('Image processing failed:', response.data.message);
+            return false;
+        }
+
     } catch (error) {
-        console.error('Error sending image URL to Flask:', error, `http://${process.env.HOST}:3000/process-image`);
+        console.error('Error processing image:', {
+            message: error.message,
+            url: url,
+            response: error.response?.data,
+            flaskServer: `http://${process.env.FLASK_HOST || 'localhost'}:${process.env.FLASK_PORT || 3000}/process-image`
+        });
+        return false;
     }
 };

@@ -7,15 +7,16 @@ from io import BytesIO
 
 if __name__ == "__main__":
     # Read image data from stdin
-    image_data = sys.stdin.buffer.read()
-    image = Image.open(BytesIO(image_data))
+    # image_data = sys.stdin.buffer.read()
+    # image = Image.open(BytesIO(image_data))
+    image = Image.open("temp_image.jpg")
 
     # Initialize the pipeline
     pipeline = ObjectRemovalPipeline(device="cpu")
-
+    print(f"pipeline started: {image}")
     # Process the image
     detection_results = pipeline.process(
-        image_path=None,  # No path, directly pass the image
+        image=None,  # No path, directly pass the image
         target_object="couch",
         prompt="Fill the area with matching patterns from the surroundings."
     )
