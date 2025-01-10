@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify
+from subprocess import Popen, PIPE
 from flask_cors import CORS
-from subprocess import call
 import requests
 import os
 
@@ -10,35 +10,24 @@ CORS(app)
 @app.route('/process-image', methods=['POST'])
 def process_image():
     try:
+        # Get the image URL from the JSON payload
         data = request.json
         image_url = data['image_url']
-        print(f"Received image URL: {image_url}")
-
+        
         # Download the image
         response = requests.get(image_url)
         response.raise_for_status()
+        image_data = response.content
         
-        # Save the image
-        image_path = 'temp_image.jpg'
-        with open(image_path, 'wb') as f:
-            f.write(response.content)
-        
-        print(f"Saved image to: {image_path}")
-        
-        # Process the image
-        result = call(["python3", "main.py", 'temp_image.jpg'])
-        
-        if result == 0:
-            return jsonify({
-                "status": "success",
-                "message": "Image processed successfully.",
-                "data": ""
-            })
+        # Pass the binary image data to main.py via stdin
+        process = Popen(["python3", "main.py"], stdin=PIPE, stdout=PIPE, stderr=PIPE)
+        stdout, stderr = process.communicate(input=image_data)
+
+        if process.returncode == 0:
+            # Return the detection results from main.py
+            return jsonify({"status": "success", "results": stdout.decode('utf-8')})
         else:
-            return jsonify({
-                "status": "error",
-                "message": f"Image processing failed with exit code: {result}"
-            })
+            return jsonify({"status": "error", "message": stderr.decode('utf-8')})
 
     except Exception as e:
         print(f"Error processing image: {str(e)}")

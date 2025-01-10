@@ -2,21 +2,33 @@ import cv2
 import numpy as np
 import os
 import matplotlib.pyplot as plt  # For macOS-compatible image display
+from PIL import Image
+from io import BytesIO
 
-def preprocess_image(image_path, size=(512, 512)):
-    print("Preprocessing image...")
-    image_path = os.path.abspath(image_path)
-    image = cv2.imread(image_path)
-    if image is None:
-        raise FileNotFoundError(f"Image not found at path: {image_path}")
+def preprocess_image(image_data, size=(512, 512)):
+    """
+    Preprocess the input binary image data.
+
+    Args:
+        image_data (bytes): Binary image data.
+        size (tuple): Target size for resizing.
+
+    Returns:
+        tuple: (original_image, preprocessed_image, original_size)
+    """
+    print("Preprocessing image from binary data...")
     
-    # Store the original image size (width, height)
-    original_size = (image.shape[1], image.shape[0])
-    
+    # Convert binary data to a NumPy array and then to OpenCV format
+    original_image = np.array(Image.open(BytesIO(image_data)))
+    original_image = cv2.cvtColor(original_image, cv2.COLOR_RGB2BGR)
+
+    # Store the original size
+    original_size = (original_image.shape[1], original_image.shape[0])
+
     # Resize the image to the target size
-    image_resized = cv2.resize(image, size)
-    
-    return image, image_resized, original_size
+    preprocessed_image = cv2.resize(original_image, size)
+
+    return original_image, preprocessed_image, original_size
 
 def create_mask(image, detections):
     print("Creating mask for detected objects...")

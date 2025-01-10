@@ -1,0 +1,369 @@
+{
+    "image_name": "temp_image.jpg",
+    "detections": [
+        {
+            "class_name": "skateboard",
+            "bbox": {
+                "xmin": 442,
+                "ymin": 40,
+                "xmax": 847,
+                "ymax": 169
+            }
+        },
+        {
+            "class_name": "person",
+            "bbox": {
+                "xmin": 193,
+                "ymin": 938,
+                "xmax": 1014,
+                "ymax": 1643
+            }
+        },
+        {
+            "class_name": "remote",
+            "bbox": {
+                "xmin": 403,
+                "ymin": 1342,
+                "xmax": 881,
+                "ymax": 1703
+            }
+        },
+        {
+            "class_name": "bird",
+            "bbox": {
+                "xmin": 42,
+                "ymin": 267,
+                "xmax": 100,
+                "ymax": 323
+            }
+        }
+    ]
+},
+{
+    "image_name": "temp_image.jpg",
+    "detections": [
+        {
+            "class_name": "skateboard",
+            "bbox": {
+                "xmin": 442,
+                "ymin": 40,
+                "xmax": 847,
+                "ymax": 169
+            }
+        },
+        {
+            "class_name": "person",
+            "bbox": {
+                "xmin": 193,
+                "ymin": 938,
+                "xmax": 1014,
+                "ymax": 1643
+            }
+        },
+        {
+            "class_name": "remote",
+            "bbox": {
+                "xmin": 403,
+                "ymin": 1342,
+                "xmax": 881,
+                "ymax": 1703
+            }
+        },
+        {
+            "class_name": "bird",
+            "bbox": {
+                "xmin": 42,
+                "ymin": 267,
+                "xmax": 100,
+                "ymax": 323
+            }
+        }
+    ]
+},
+{
+    "image_name": "temp_image.jpg",
+    "detections": [
+        {
+            "class_name": "skateboard",
+            "bbox": {
+                "xmin": 442,
+                "ymin": 40,
+                "xmax": 847,
+                "ymax": 169
+            }
+        },
+        {
+            "class_name": "person",
+            "bbox": {
+                "xmin": 193,
+                "ymin": 938,
+                "xmax": 1014,
+                "ymax": 1643
+            }
+        },
+        {
+            "class_name": "remote",
+            "bbox": {
+                "xmin": 403,
+                "ymin": 1342,
+                "xmax": 881,
+                "ymax": 1703
+            }
+        },
+        {
+            "class_name": "bird",
+            "bbox": {
+                "xmin": 42,
+                "ymin": 267,
+                "xmax": 100,
+                "ymax": 323
+            }
+        }
+    ]
+},
+{
+    "image_name": "new_image.jpeg",
+    "detections": [
+        {
+            "class_name": "skateboard",
+            "bbox": {
+                "xmin": 442,
+                "ymin": 40,
+                "xmax": 847,
+                "ymax": 169
+            }
+        },
+        {
+            "class_name": "person",
+            "bbox": {
+                "xmin": 193,
+                "ymin": 938,
+                "xmax": 1014,
+                "ymax": 1643
+            }
+        },
+        {
+            "class_name": "remote",
+            "bbox": {
+                "xmin": 403,
+                "ymin": 1342,
+                "xmax": 881,
+                "ymax": 1703
+            }
+        },
+        {
+            "class_name": "bird",
+            "bbox": {
+                "xmin": 42,
+                "ymin": 267,
+                "xmax": 100,
+                "ymax": 323
+            }
+        }
+    ]
+},
+{
+    "image_name": "new_image.jpeg",
+    "detections": [
+        {
+            "class_name": "skateboard",
+            "bbox": {
+                "xmin": 442,
+                "ymin": 40,
+                "xmax": 847,
+                "ymax": 169
+            }
+        },
+        {
+            "class_name": "person",
+            "bbox": {
+                "xmin": 193,
+                "ymin": 938,
+                "xmax": 1014,
+                "ymax": 1643
+            }
+        },
+        {
+            "class_name": "remote",
+            "bbox": {
+                "xmin": 403,
+                "ymin": 1342,
+                "xmax": 881,
+                "ymax": 1703
+            }
+        },
+        {
+            "class_name": "bird",
+            "bbox": {
+                "xmin": 42,
+                "ymin": 267,
+                "xmax": 100,
+                "ymax": 323
+            }
+        }
+    ]
+},
+{
+    "image_name": "new_image.jpeg",
+    "detections": [
+        {
+            "class_name": "skateboard",
+            "bbox": {
+                "xmin": 442,
+                "ymin": 40,
+                "xmax": 847,
+                "ymax": 169
+            }
+        },
+        {
+            "class_name": "person",
+            "bbox": {
+                "xmin": 193,
+                "ymin": 938,
+                "xmax": 1014,
+                "ymax": 1643
+            }
+        },
+        {
+            "class_name": "remote",
+            "bbox": {
+                "xmin": 403,
+                "ymin": 1342,
+                "xmax": 881,
+                "ymax": 1703
+            }
+        },
+        {
+            "class_name": "bird",
+            "bbox": {
+                "xmin": 42,
+                "ymin": 267,
+                "xmax": 100,
+                "ymax": 323
+            }
+        }
+    ]
+},
+{
+    "image_name": "new_image.jpeg",
+    "detections": [
+        {
+            "class_name": "skateboard",
+            "bbox": {
+                "xmin": 442,
+                "ymin": 40,
+                "xmax": 847,
+                "ymax": 169
+            }
+        },
+        {
+            "class_name": "person",
+            "bbox": {
+                "xmin": 193,
+                "ymin": 938,
+                "xmax": 1014,
+                "ymax": 1643
+            }
+        },
+        {
+            "class_name": "remote",
+            "bbox": {
+                "xmin": 403,
+                "ymin": 1342,
+                "xmax": 881,
+                "ymax": 1703
+            }
+        },
+        {
+            "class_name": "bird",
+            "bbox": {
+                "xmin": 42,
+                "ymin": 267,
+                "xmax": 100,
+                "ymax": 323
+            }
+        }
+    ]
+},
+{
+    "image_name": "new_image.jpeg",
+    "detections": [
+        {
+            "class_name": "skateboard",
+            "bbox": {
+                "xmin": 442,
+                "ymin": 40,
+                "xmax": 847,
+                "ymax": 169
+            }
+        },
+        {
+            "class_name": "person",
+            "bbox": {
+                "xmin": 193,
+                "ymin": 938,
+                "xmax": 1014,
+                "ymax": 1643
+            }
+        },
+        {
+            "class_name": "remote",
+            "bbox": {
+                "xmin": 403,
+                "ymin": 1342,
+                "xmax": 881,
+                "ymax": 1703
+            }
+        },
+        {
+            "class_name": "bird",
+            "bbox": {
+                "xmin": 42,
+                "ymin": 267,
+                "xmax": 100,
+                "ymax": 323
+            }
+        }
+    ]
+},
+{
+    "image_name": "new_image.jpeg",
+    "detections": [
+        {
+            "class_name": "skateboard",
+            "bbox": {
+                "xmin": 442,
+                "ymin": 40,
+                "xmax": 847,
+                "ymax": 169
+            }
+        },
+        {
+            "class_name": "person",
+            "bbox": {
+                "xmin": 193,
+                "ymin": 938,
+                "xmax": 1014,
+                "ymax": 1643
+            }
+        },
+        {
+            "class_name": "remote",
+            "bbox": {
+                "xmin": 403,
+                "ymin": 1342,
+                "xmax": 881,
+                "ymax": 1703
+            }
+        },
+        {
+            "class_name": "bird",
+            "bbox": {
+                "xmin": 42,
+                "ymin": 267,
+                "xmax": 100,
+                "ymax": 323
+            }
+        }
+    ]
+},

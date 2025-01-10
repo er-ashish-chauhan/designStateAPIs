@@ -16,9 +16,16 @@ const Products = require('./models/Products');
 const WishlistedItems = require('./models/WishlistedItems');
 const UnityProgress = require('./models/UnityProgress');
 const cors = require('cors');
+const http = require('http');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+
+const server = http.createServer(app);
+
+server.setTimeout(400000, () => {
+  console.log('Request timed out!');
+});
 
 // Logger configuration
 const logger = winston.createLogger({

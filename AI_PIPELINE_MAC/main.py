@@ -1,32 +1,24 @@
 from pipeline.object_removal import ObjectRemovalPipeline
-from PIL import Image
-import numpy as np
-import json
+from utils.helpers import preprocess_image
 import sys
-from io import BytesIO
+import json
 
 if __name__ == "__main__":
-    # Read image data from stdin
-    # image_data = sys.stdin.buffer.read()
-    # image = Image.open(BytesIO(image_data))
-    image = Image.open("temp_image.jpg")
+    # Read binary image data from stdin
+    image_data = sys.stdin.buffer.read()
 
     # Initialize the pipeline
     pipeline = ObjectRemovalPipeline(device="cpu")
-    print(f"pipeline started: {image}")
-    # Process the image
+
+    # Preprocess the image (binary data)
+    original_image, preprocessed_image, original_size = preprocess_image(image_data)
+
+    # Run the object removal pipeline
     detection_results = pipeline.process(
-        image=None,  # No path, directly pass the image
+        image_input=image_data,  # Pass binary image data
         target_object="couch",
         prompt="Fill the area with matching patterns from the surroundings."
     )
 
-    # Example: Simulate detection results (replace this with actual pipeline results)
-    results = {
-        "detected_objects": [
-            {"label": "couch", "confidence": 0.95, "bbox": [100, 200, 300, 400]}
-        ]
-    }
-
-    # Output the results as JSON
-    print(json.dumps(results))
+    # Output the detection results as JSON
+    print(json.dumps(detection_results))
