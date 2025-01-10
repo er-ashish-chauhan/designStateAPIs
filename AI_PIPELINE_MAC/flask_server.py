@@ -1,31 +1,30 @@
 from flask import Flask, request, jsonify
-from subprocess import call
-import requests  # For downloading the image from the URL
-import os
+from subprocess import Popen, PIPE
+import requests
 
 app = Flask(__name__)
 
 @app.route('/process-image', methods=['POST'])
 def process_image():
     try:
-        # Get the image URL from the request JSON
+        # Get the image URL from the JSON payload
         data = request.json
         image_url = data['image_url']
-        print(image_url)
-        # Download the image from the URL
+        
+        # Download the image
         response = requests.get(image_url)
-        response.raise_for_status()  # Raise an error if the request failed
+        response.raise_for_status()
         image_data = response.content
+        
+        # Pass the binary image data to main.py via stdin
+        process = Popen(["python", "main.py"], stdin=PIPE, stdout=PIPE, stderr=PIPE)
+        stdout, stderr = process.communicate(input=image_data)
 
-        # Save the image locally (optional) or pass it to main.py
-        image_path = 'temp_image.jpg'  # Temporary file
-        with open(image_path, 'wb') as f:
-            f.write(image_data)
-        print("image_path", image_path)
-        # Start main.py with the image path as a parameter
-        call(["python", "main.py", image_path])
-
-        return jsonify({"status": "success", "message": "Image processed successfully."})
+        if process.returncode == 0:
+            # Return the detection results from main.py
+            return jsonify({"status": "success", "results": stdout.decode('utf-8')})
+        else:
+            return jsonify({"status": "error", "message": stderr.decode('utf-8')})
 
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)})
