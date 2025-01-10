@@ -30,5 +30,5 @@ def process_image():
         return jsonify({"status": "error", "message": str(e)})
 
 if __name__ == '__main__':
-    port = int(os.environ.get('PORT', 3000))  # Default to 3000 if PORT not set
+    port = int(os.environ.get('PORT', 3001))  # Default to 3000 if PORT not set
     app.run(debug=True, host=os.environ.get('HOST', 'localhost'), port=port)
