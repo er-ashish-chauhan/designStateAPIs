@@ -7,6 +7,15 @@ const morgan = require('morgan');
 const winston = require('winston');
 const User = require('./models/User');
 const UserProfile = require('./models/UserProfile');
+const ProductCategories = require('./models/ProductCategories');
+const ProjectGroups = require('./models/ProjectGroups');
+const ProjectImages = require('./models/ProjectImages');
+const Projects = require('./models/Projects');
+const UserGallery = require('./models/UserGallery');
+const Products = require('./models/Products');
+const WishlistedItems = require('./models/WishlistedItems');
+const UnityProgress = require('./models/UnityProgress');
+const cors = require('cors');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -21,6 +30,9 @@ const logger = winston.createLogger({
         new winston.transports.File({ filename: 'combined.log' }),
     ],
 });
+
+// Enable CORS for all routes
+app.use(cors());
 
 // Middleware for logging HTTP requests
 app.use(morgan('combined', { stream: { write: message => logger.info(message.trim()) } }));

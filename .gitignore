@@ -1,1 +1,7 @@
-.DS_Store
+# Ignore node_modules
+node_modules/
+combined.log
+combined.log
+.env
+.env.local
+.env.prod.local
