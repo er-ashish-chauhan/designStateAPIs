@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt  # For macOS-compatible image display
 from PIL import Image
 from io import BytesIO
 
-def preprocess_image(image_data, size=(512, 512)):
+def preprocess_image(image_data):
     """
     Preprocess the input binary image data.
 
@@ -16,6 +16,7 @@ def preprocess_image(image_data, size=(512, 512)):
     Returns:
         tuple: (original_image, preprocessed_image, original_size)
     """
+    size=(512, 512)
     print("Preprocessing image from binary data...")
     
     # Convert binary data to a NumPy array and then to OpenCV format
