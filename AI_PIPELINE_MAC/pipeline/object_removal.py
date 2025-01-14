@@ -144,17 +144,17 @@ class ObjectRemovalPipeline:
 
 
 
-    def process(self, image_path, target_object, prompt, output_file="detections.json"):
-        print(f"Starting the object removal pipeline for {image_path}...")
+    def process(self, image_input, target_object, prompt, output_file="detections.json"):
+        print(f"Starting the object removal pipeline for {image_input}...")
 
         # Preprocess the image and get the original image and resized image
-        original_image, preprocessed_image, original_size = preprocess_image(image_path)
+        original_image, preprocessed_image, original_size = preprocess_image(image_input)
 
         # Detect all objects and get the detected image with bounding boxes
         detections, detected_image = self.detect_objects(preprocessed_image, original_image)
 
         # Get the image file name (e.g., "xyz.jpeg")
-        image_name = os.path.basename(image_path)
+        image_name = "new_image.jpeg"
 
         # Create a dictionary to store the detections
         detection_data = {

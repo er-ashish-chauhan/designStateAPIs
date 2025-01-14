@@ -252,7 +252,7 @@ exports.getWishlistItems = async (req, res) => {
         }
 
         const wishlistItems = await WishlistedItems.findAll({
-            where: { userId },
+            where: { userId, deleted: false },
             include: [{
                 model: Products,
                 include: [{

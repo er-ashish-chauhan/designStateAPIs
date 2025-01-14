@@ -326,6 +326,7 @@ exports.saveProjectImage = async (req, res) => {
         await updateProjectAction(image.projectId, "image_added");
 
         // Remove the `deleted` field before sending response
+        responseData.detectedObjectsJson = isImageProcessed;
         const { deleted, ...responseData } = newImage.toJSON();
         res.status(201).json(formatResponse(responseData, 'Project image saved successfully.', true));
     } catch (error) {
