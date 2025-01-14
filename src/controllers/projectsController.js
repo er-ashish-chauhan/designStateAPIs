@@ -326,9 +326,11 @@ exports.saveProjectImage = async (req, res) => {
         await updateProjectAction(image.projectId, "image_added");
 
         // Remove the `deleted` field before sending response
-        responseData.detectedObjectsJson = isImageProcessed;
         const { deleted, ...responseData } = newImage.toJSON();
+        responseData.detectedObjectsJson = isImageProcessed.detections;
+        // console.log("respons",responseData)
         res.status(201).json(formatResponse(responseData, 'Project image saved successfully.', true));
+
     } catch (error) {
         console.error('Error saving image(s):', error);
         res.status(500).json(formatResponse(null, error.message, false));
@@ -554,12 +556,12 @@ const processImage = async (image) => {
                 'Content-Type': 'application/json'
             },
             // Add timeout to prevent hanging
-            timeout: 30000 // 30 seconds
+            timeout: 50000 // 50 seconds
         });
 
         if (response.data.status === 'success') {
-            console.log('Image processing successful:', response.data.message);
-            return true;
+            console.log('Image processing successful:', response);
+            return response.data;
         } else {
             console.error('Image processing failed:', response.data.message);
             return false;

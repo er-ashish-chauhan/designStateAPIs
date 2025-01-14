@@ -1,17 +1,16 @@
 from pipeline.object_removal import ObjectRemovalPipeline
 from utils.helpers import preprocess_image
-import sys
 import json
+import sys
 
-if __name__ == "__main__":
-    # Read binary image data from stdin
-    image_data = sys.stdin.buffer.read()
-
+def process_image(image_data):
     # Initialize the pipeline
     pipeline = ObjectRemovalPipeline(device="cpu")
 
-    # Preprocess the image (binary data)
+    # Preprocess the image
     original_image, preprocessed_image, original_size = preprocess_image(image_data)
+
+    print("Image received and pre-processed")
 
     # Run the object removal pipeline
     detection_results = pipeline.process(
@@ -19,6 +18,17 @@ if __name__ == "__main__":
         target_object="couch",
         prompt="Fill the area with matching patterns from the surroundings."
     )
+    return detection_results
 
-    # Output the detection results as JSON
-    print(json.dumps(detection_results))
+if __name__ == "__main__":
+    # Check for an input file path (optional)
+    if len(sys.argv) > 1:
+        with open(sys.argv[1], "rb") as f:
+            image_data = f.read()
+    else:
+        print("Please provide an image file path.", file=sys.stderr)
+        sys.exit(1)
+
+    # Process the image and print the JSON results
+    results = process_image(image_data)
+    print(json.dumps(results))
