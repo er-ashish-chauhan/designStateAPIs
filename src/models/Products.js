@@ -21,6 +21,10 @@ const Products = sequelize.define('Products', {
   dimensionsUnit: {
     type: DataTypes.STRING,
   },
+  unityName: {
+    type: DataTypes.STRING,
+    defaultValue: null,
+  },
   dimensions: {
     type: DataTypes.JSON,
   },

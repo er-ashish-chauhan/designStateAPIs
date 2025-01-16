@@ -4,105 +4,7 @@ const ProductCategory = require('../models/ProductCategories'); // Import your m
 const Products = require('../models/Products');
 const WishlistedItems = require('../models/WishlistedItems');
 const { formatResponse } = require('../utils/formatResponse');
-
-const furnitureItems = [
-    {
-        name: "Modern Sofa",
-        categoryId: 10,
-        type: "Sofa",
-        dimensionsUnit: "cm",
-        dimensions: { length: "200", width: "90", height: "85" },
-        color: "Gray",
-        material: "Fabric",
-        price: 499.99,
-        brand: "FurnitureCo",
-        features: ["Removable Cushions", "Modern Design", "Easy to Clean"],
-        weight: "30 kg",
-        imageUrl: ["https://example.com/images/sofa.jpg"],
-        warranty: "2 years",
-        rating: 4.5,
-        reviews: 150,
-        availability: true,
-        tags: ["modern", "comfortable", "durable"],
-        shippingDimensions: { length: "210", width: "95", height: "40" },
-        shippingWeight: "35 kg",
-        deliveryTime: "5-7 business days",
-        ecoFriendly: true,
-        careInstructions: "Clean with a damp cloth. Avoid harsh chemicals.",
-        discount: 15,
-        bundleOffers: "Buy 1 Sofa, Get 1 Ottoman at 50% off",
-        faq: [
-            { question: "Does this sofa come in other colors?", answer: "Yes, it is available in Gray, Blue, and Beige." },
-            { question: "Is it pet-friendly?", answer: "The fabric is scratch-resistant and suitable for pets." }
-        ],
-        countryOfOrigin: "India"
-    },
-    {
-        name: "Oak Coffee Table",
-        categoryId: 10,
-        type: "Table",
-        dimensionsUnit: "cm",
-        dimensions: { length: "120", width: "60", height: "45" },
-        color: "Natural Oak",
-        material: "Solid Wood",
-        price: 249.99,
-        brand: "OakLine",
-        features: ["Scratch-Resistant Surface", "Minimalist Design", "Compact Size"],
-        weight: "15 kg",
-        imageUrl: "https://example.com/images/coffee_table.jpg",
-        warranty: "3 years",
-        rating: 4.7,
-        reviews: 85,
-        availability: true,
-        tags: ["classic", "durable", "compact"],
-        customizationOptions: { finishes: ["Matte", "Glossy"], colors: ["Natural Oak", "Dark Walnut"] },
-        shippingDimensions: { length: "130", width: "70", height: "20" },
-        shippingWeight: "18 kg",
-        deliveryTime: "3-5 business days",
-        ecoFriendly: true,
-        careInstructions: "Wipe with a dry cloth. Avoid using water or harsh chemicals.",
-        discount: 10,
-        bundleOffers: "Buy 1 Coffee Table, Get 10% off on matching stools",
-        faq: [
-            { question: "Is the wood treated for durability?", answer: "Yes, the surface is treated to resist scratches and stains." },
-            { question: "Can this table be used outdoors?", answer: "No, this table is designed for indoor use only." }
-        ],
-        countryOfOrigin: "USA"
-    },
-    {
-        name: "Queen Size Bed Frame",
-        categoryId: 9,
-        type: "Bed",
-        dimensionsUnit: "cm",
-        dimensions: { length: "210", width: "160", height: "40" },
-        color: "White",
-        material: "Metal",
-        price: 399.99,
-        brand: "DreamSleep",
-        features: ["Noise-Free Frame", "Strong Slat Support", "Rust-Resistant Finish"],
-        weight: "25 kg",
-        imageUrl: "https://example.com/images/bed_frame.jpg",
-        warranty: "5 years",
-        rating: 4.6,
-        reviews: 120,
-        availability: true,
-        tags: ["sturdy", "minimalist", "durable"],
-        customizationOptions: { colors: ["White", "Black", "Silver"] },
-        shippingDimensions: { length: "220", width: "170", height: "15" },
-        shippingWeight: "28 kg",
-        deliveryTime: "7-10 business days",
-        ecoFriendly: false,
-        careInstructions: "Wipe with a soft dry cloth.",
-        discount: 20,
-        bundleOffers: "Buy 1 Bed Frame, Get 20% off on matching mattress",
-        faq: [
-            { question: "Does this bed frame include a mattress?", answer: "No, the mattress is sold separately." },
-            { question: "Is the assembly easy?", answer: "Yes, the frame comes with easy-to-follow instructions." }
-        ],
-        countryOfOrigin: "China"
-    }
-];
-
+const { furnitureDataItems } = require('../constants');
 // Get all categories
 exports.getCategories = async (req, res) => {
     try {
@@ -138,7 +40,7 @@ exports.insertProducts = async (req, res) => {
         }
 
         // Insert products if they do not exist
-        await Products.bulkCreate(furnitureItems, { validate: true });
+        await Products.bulkCreate(furnitureDataItems, { validate: true });
         res.status(200).json(formatResponse(null, 'Products inserted successfully!'));
     } catch (error) {
         console.error(error);
@@ -351,7 +253,7 @@ exports.updateProduct = async (req, res) => {
 
         // Filter out any fields that aren't in the allowed list
         const filteredUpdateData = Object.keys(updateData)
-            .filter(key => allowedFields.includes(key)) 
+            .filter(key => allowedFields.includes(key))
             .reduce((obj, key) => {
                 obj[key] = updateData[key];
                 return obj;
