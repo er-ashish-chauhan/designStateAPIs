@@ -16,3 +16,6 @@ HF_TOKEN = "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"
 ENABLE_INPAINTING = False
 # Inpainting method: "opencv" or "stable-diffusion"
 INPAINT_METHOD = "stable-diffusion"
+
+HOST = "34.203.14.46"
+PORT = 3001

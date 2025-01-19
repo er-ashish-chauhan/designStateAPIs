@@ -5,6 +5,7 @@ import main  # Import the main.py module
 import sys
 import os
 import json
+from config import HOST, PORT
 
 app = Flask(__name__)
 CORS(app)
@@ -39,7 +40,7 @@ def process_image():
 
 
 if __name__ == '__main__':
-    port = int(os.environ.get('FLASK_PORT', 3001))
-    host = os.environ.get('HOST', 'localhost')
+    port = int(os.environ.get('FLASK_PORT', PORT))
+    host = os.environ.get('HOST', HOST)
     print(f"Starting Flask server on {host}:{port}")
     app.run(debug=True, host=host, port=port)
