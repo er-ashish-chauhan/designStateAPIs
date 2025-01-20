@@ -68,11 +68,18 @@ exports.getProducts = async (req, res) => {
             queryOptions.where.categoryId = categoryId;
         }
 
-        const products = await Products.findAll(queryOptions);
+        const products = await Products.findAll(queryOptions, {
+            attributes: {
+                exclude: ['deleted', 'updatedAt']
+            },
+            where: {
+                deleted: false
+            }
+        });
 
         // Get all wishlisted items for the current user
         const wishlistedItems = await WishlistedItems.findAll({
-            where: { userId },
+            where: { userId, deleted: false },
             attributes: ['productId']
         });
 
