@@ -19,8 +19,8 @@ class ObjectRemovalPipeline:
         self.yolo_model = load_yolo_model(yolo_model_path)
         self.inpaint_method = INPAINT_METHOD
 
-        if self.inpaint_method == "stable-diffusion":
-            self.sd_pipeline = load_stable_diffusion(sd_model_path, self.token, device)
+        # if self.inpaint_method == "stable-diffusion":
+        #     self.sd_pipeline = load_stable_diffusion(sd_model_path, self.token, device)
 
     def detect_objects(self, preprocessed_image, original_image):
         print("Detecting all objects in the image...")
