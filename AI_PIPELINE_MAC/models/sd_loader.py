@@ -22,6 +22,7 @@ def load_stable_diffusion(model_path=SD_MODEL_PATH, token=HF_TOKEN, device=DEFAU
         pipeline = StableDiffusionInpaintPipeline.from_pretrained(
             model_path,
             use_auth_token=token
+            low_cpu_mem_usage=True
         ).to(device)
 
         return pipeline
