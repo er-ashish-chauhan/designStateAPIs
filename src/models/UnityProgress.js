@@ -17,7 +17,7 @@ const UnityProgress = sequelize.define('UnityProgress', {
     },
     modelPlacements: {
         type: DataTypes.JSON,
-        allowNull: false,
+        allowNull: true,
         defaultValue: null
     },
     status: {

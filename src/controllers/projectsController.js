@@ -1,6 +1,6 @@
 const { default: axios } = require('axios');
 const sequelize = require('../config/db');
-const { Projects, ProjectGroups, ProjectImages, UserGallery, UnityProgress } = require('../models/associations');
+const { Projects, ProjectGroups, ProjectImages, UserGallery, UnityProgress, ProjectImageAIDetection } = require('../models/associations');
 
 const { formatResponse } = require('../utils/formatResponse');
 
@@ -119,10 +119,13 @@ exports.createProject = async (req, res) => {
             projectGroupId: finalGroupId,
             name,
             type,
+            lastAction: "project_created"  // Set initial lastAction
         });
 
+        await updateProjectAction(newProject.id, "project_created");
+
         res
-            .status(201)
+            .status(200)
             .json(formatResponse(newProject, "Project created successfully.", true));
     } catch (error) {
         res
@@ -246,7 +249,10 @@ exports.deleteProject = async (req, res) => {
         }
 
         // Update the 'deleted' flag to true
-        await project.update({ deleted: true });
+        await project.update({ 
+            deleted: true,
+            lastAction: "project_deleted"
+        });
 
         res.status(200).json(formatResponse({
             projectId: id
@@ -304,6 +310,18 @@ exports.saveProjectImage = async (req, res) => {
             return res.status(400).json(formatResponse(null, error, false));
         }
 
+        // Check if project exists
+        const project = await Projects.findOne({
+            where: { 
+                id: image.projectId,
+                deleted: false
+            }
+        });
+
+        if (!project) {
+            return res.status(404).json(formatResponse(null, 'Project not found or has been deleted.', false));
+        }
+
         const imageName = image?.name ?? image.imageUrl.split('/').pop();
         // Process and save images
         const newImage = await ProjectImages.create({
@@ -314,22 +332,11 @@ exports.saveProjectImage = async (req, res) => {
             dimensions: image.dimensions,
         });
 
-        const getImageUrl = await UserGallery.findOne({ where: { id: image.imageId } });
-        // console.log("getImageUrl...", getImageUrl);
-        const imageUrl = getImageUrl.imageUrl;
-        // process image
-        const isImageProcessed = await processImage(imageUrl);
-        if (!isImageProcessed) {
-            return res.status(500).json(formatResponse(null, 'Failed to process image', false));
-        }
-
         await updateProjectAction(image.projectId, "image_added");
 
         // Remove the `deleted` field before sending response
         const { deleted, ...responseData } = newImage.toJSON();
-        responseData.detectedObjectsJson = isImageProcessed.detections.detections;
-        // console.log("respons",responseData)
-        res.status(201).json(formatResponse(responseData, 'Project image saved successfully.', true));
+        res.status(200).json(formatResponse(responseData, 'Project image saved successfully.', true));
 
     } catch (error) {
         console.error('Error saving image(s):', error);
@@ -363,7 +370,7 @@ exports.getImagesForProject = async (req, res) => {
             include: {
                 model: UserGallery,
                 as: 'userGallery', // Assuming the association is defined as 'userGallery'
-                attributes: ['imageUrl'], // Fetch only the imageUrl field
+                attributes: ['imageUrl', 'dimensionUnit'], // Fetch only the imageUrl field
             },
         });
 
@@ -377,6 +384,7 @@ exports.getImagesForProject = async (req, res) => {
             return {
                 ...imageData,
                 imageUrl: userGallery ? userGallery.imageUrl : null, // If userGallery exists, include the imageUrl
+                dimensionUnit: userGallery ? userGallery.dimensionUnit : null, // If userGallery exists, include the dimensionUnit
             };
         });
 
@@ -414,11 +422,13 @@ exports.saveUnityProgress = async (req, res) => {
 
             // Transform the response to remove 'deleted' field from each entry
             const responseData = newUnityProgress.map(progress => {
-                const { deleted, ...data } = progress.toJSON();
+                const { deleted, sessionData, deletedAt, ...data } = progress.toJSON();
                 return data;
             });
 
-            res.status(201).json(formatResponse(responseData, 'Multiple unity progress entries saved successfully.', true));
+            await updateProjectAction(projectId, "unity_changes");
+
+            res.status(200).json(formatResponse(responseData, 'Multiple unity progress entries saved successfully.', true));
         } else {
             // Handle single model placement
             newUnityProgress = await UnityProgress.create({
@@ -429,7 +439,8 @@ exports.saveUnityProgress = async (req, res) => {
             });
 
             const { deleted, ...responseData } = newUnityProgress.toJSON();
-            res.status(201).json(formatResponse(responseData, 'Unity progress saved successfully.', true));
+            await updateProjectAction(projectId, "unity_changes");
+            res.status(200).json(formatResponse(responseData, 'Unity progress saved successfully.', true));
         }
     } catch (error) {
         console.error('Error saving unity progress:', error);
@@ -509,6 +520,175 @@ exports.getUnityProgress = async (req, res) => {
     }
 };
 
+// get project image AI detection
+exports.getProjectImageAIDetection = async (req, res) => {
+    try {
+        const { projectId, imageId } = req.query; // Changed from req.params to req.query
+
+        // Validate required parameters
+        if (!projectId || !imageId) {
+            return res.status(400).json(formatResponse(
+                null,
+                'Project ID and Image ID are required query parameters.',
+                false
+            ));
+        }
+
+        // First check if AI detection already exists
+        let projectImageAIDetection = await ProjectImageAIDetection.findOne({ 
+            where: { 
+                projectId: parseInt(projectId), // Convert to integer since query params are strings
+                imageId: parseInt(imageId)
+            } 
+        });
+
+        // If AI detection exists, update lastAction and return it
+        if (projectImageAIDetection) {
+            await updateProjectAction(parseInt(projectId), "ai_detection");
+            return res.status(200).json(formatResponse(
+                projectImageAIDetection, 
+                'Project image AI detection fetched successfully.', 
+                true
+            ));
+        }
+
+        // If not exists, get the image URL from UserGallery
+        const userGalleryImage = await UserGallery.findOne({
+            where: { id: parseInt(imageId) },
+            attributes: ['imageUrl']
+        });
+
+        if (!userGalleryImage) {
+            return res.status(404).json(formatResponse(
+                null, 
+                'Image not found in gallery.', 
+                false
+            ));
+        }
+
+        // Process the image using existing processImage function
+        const processedImageResult = await processImage(userGalleryImage.imageUrl);
+
+        if (!processedImageResult) {
+            return res.status(500).json(formatResponse(
+                null, 
+                'Failed to process image for AI detection.', 
+                false
+            ));
+        }
+
+        // Save the detection results to database
+        projectImageAIDetection = await ProjectImageAIDetection.create({
+            projectId: parseInt(projectId),
+            imageId: parseInt(imageId),
+            detections: processedImageResult.detections.detections,
+            status: 'completed'
+        });
+
+        // After saving new AI detection
+        await updateProjectAction(parseInt(projectId), "ai_detection");
+
+        // Return the newly created AI detection
+        res.status(200).json(formatResponse(
+            projectImageAIDetection, 
+            'Project image AI detection processed and saved successfully.', 
+            true
+        ));
+
+    } catch (error) {
+        console.error('Error in getProjectImageAIDetection:', error);
+        res.status(500).json(formatResponse(
+            null, 
+            'Failed to fetch or process project image AI detection', 
+            false
+        ));
+    }
+};
+
+// remove specific AI detection object
+exports.removeProjectImageAIDetection = async (req, res) => {
+    try {
+        const { projectId, imageId } = req.query;
+        const { detectedObject } = req.body;
+
+        // Validate required parameters
+        if (!projectId || !imageId || !detectedObject || !detectedObject.class_name) {
+            return res.status(400).json(formatResponse(
+                null,
+                'Project ID, Image ID, and detected object with class_name are required.',
+                false
+            ));
+        }
+
+        // Find the existing AI detection record
+        const aiDetection = await ProjectImageAIDetection.findOne({
+            attributes: ['detections'],
+            where: {
+                projectId: parseInt(projectId),
+                imageId: parseInt(imageId)
+            }
+        });
+
+        if (!aiDetection) {
+            return res.status(404).json(formatResponse(
+                null,
+                'AI detection record not found.',
+                false
+            ));
+        }
+
+        // Get current detections array
+        const currentDetections = aiDetection.detections;
+
+        // Filter out the objects that match the class_name and bbox
+        const updatedDetections = currentDetections.filter(detection => {
+            // If class_name is different, keep the detection
+            if (detection.class_name !== detectedObject.class_name) {
+                return true;
+            }
+
+            // If bbox is provided, compare bbox values
+            if (detectedObject.bbox) {
+                const currentBbox = detection.bbox;
+                const targetBbox = detectedObject.bbox;
+                
+                // Keep the detection if bbox values don't match exactly
+                return !(
+                    currentBbox.xmax === targetBbox.xmax &&
+                    currentBbox.xmin === targetBbox.xmin &&
+                    currentBbox.ymax === targetBbox.ymax &&
+                    currentBbox.ymin === targetBbox.ymin
+                );
+            }
+
+            // If no bbox provided, remove all detections with matching class_name
+            return false;
+        });
+
+        // Update the record with the filtered detections
+        await aiDetection.update({
+            detections: updatedDetections
+        });
+
+        // After updating the detections
+        await updateProjectAction(parseInt(projectId), "ai_detection_removed");
+
+        res.status(200).json(formatResponse({
+            projectId,
+            imageId,
+            updatedDetections
+        }, 'Object removed from AI detection successfully.', true));
+
+    } catch (error) {
+        console.error('Error removing object from AI detection:', error);
+        res.status(500).json(formatResponse(
+            null,
+            'Failed to remove object from AI detection',
+            false
+        ));
+    }
+};
+
 // update project date 
 const updateProjectAction = async (projectId, lastAction) => {
     try {
@@ -575,5 +755,73 @@ const processImage = async (image) => {
             flaskServer: `http://${process.env.FLASK_HOST || 'localhost'}:${process.env.FLASK_PORT || 3000}/process-image`
         });
         return false;
+    }
+};
+
+// Update Unity Progress
+exports.updateUnityProgress = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { modelPlacements } = req.body;
+
+        if (!modelPlacements) {
+            return res.status(400).json(formatResponse(null, 'Model placements data is required.', false));
+        }
+
+        // Find the unity progress entry
+        const unityProgress = await UnityProgress.findOne({
+            where: { 
+                id,
+                deleted: false 
+            }
+        });
+
+        if (!unityProgress) {
+            return res.status(404).json(formatResponse(null, 'Unity progress entry not found.', false));
+        }
+
+        // Update the model placements
+        await unityProgress.update({ 
+            modelPlacements,
+            updatedAt: new Date()
+        });
+
+        await updateProjectAction(unityProgress.projectId, "unity_changes");
+
+        // Get the updated record
+        const updatedProgress = await UnityProgress.findByPk(id);
+        const { deleted, sessionData, deletedAt, ...responseData } = updatedProgress.toJSON();
+
+        res.status(200).json(formatResponse(responseData, 'Unity progress updated successfully.', true));
+    } catch (error) {
+        console.error('Error updating unity progress:', error);
+        res.status(500).json(formatResponse(null, 'Failed to update unity progress', false));
+    }
+};
+
+// Delete Unity Progress
+exports.deleteUnityProgress = async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        // Find the unity progress entry
+        const unityProgress = await UnityProgress.findOne({
+            where: { 
+                id,
+                deleted: false 
+            }
+        });
+
+        if (!unityProgress) {
+            return res.status(404).json(formatResponse(null, 'Unity progress entry not found.', false));
+        }
+
+        // Soft delete by setting deleted flag to true
+        await unityProgress.destroy();
+
+        res.status(200).json(formatResponse({ id }, 'Unity progress deleted successfully.', true));
+    } catch (error) {
+        console.error('Error deleting unity progress:', error);
+        res.status(500).json(formatResponse(null, 'Failed to delete unity progress', false));
     }
 };

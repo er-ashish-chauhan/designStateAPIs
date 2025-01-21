@@ -15,6 +15,7 @@ const UserGallery = require('./models/UserGallery');
 const Products = require('./models/Products');
 const WishlistedItems = require('./models/WishlistedItems');
 const UnityProgress = require('./models/UnityProgress');
+const ProjectImageAIDetection = require('./models/ProjectImageAIDetection');
 const cors = require('cors');
 const http = require('http');
 

@@ -10,6 +10,11 @@ const Projects = sequelize.define('Projects', {
         type: DataTypes.STRING,
         allowNull: false,
     },
+    aiPipelineStatus: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        defaultValue: "pending"
+    },
     type: {
         type: DataTypes.STRING,
         allowNull: false,

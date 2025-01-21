@@ -30,4 +30,16 @@ router.post('/saveUnityProgress', authenticateToken, projectsController.saveUnit
 // Route for get unity progress
 router.get('/getUnityProgress/:projectId', authenticateToken, projectsController.getUnityProgress);
 
+// Route for get project image AI detection
+router.get('/getAIDetection', authenticateToken, projectsController.getProjectImageAIDetection);
+
+// Route for removing specific AI detection object
+router.put('/removeAIDetection', authenticateToken, projectsController.removeProjectImageAIDetection);
+
+// Update Unity Progress
+router.put('/unityProgress/:id', authenticateToken, projectsController.updateUnityProgress);
+
+// Delete Unity Progress
+router.delete('/unityProgress/:id', authenticateToken, projectsController.deleteUnityProgress);
+
 module.exports = router;
