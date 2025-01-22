@@ -524,6 +524,7 @@ exports.getUnityProgress = async (req, res) => {
 exports.getProjectImageAIDetection = async (req, res) => {
     try {
         const { projectId, imageId } = req.query;
+        console.log("Received request with projectId:", projectId, "imageId:", imageId);
 
         // Validate required parameters
         if (!projectId || !imageId) {
@@ -535,22 +536,25 @@ exports.getProjectImageAIDetection = async (req, res) => {
         }
 
         // First check if AI detection already exists
-        let projectImageAIDetection = await ProjectImageAIDetection.findOne({ 
-            where: { 
-                projectId: parseInt(projectId),
-                imageId: parseInt(imageId)
-            } 
-        });
+        // let projectImageAIDetection = await ProjectImageAIDetection.findOne({ 
+        //     where: { 
+        //         projectId: parseInt(projectId),
+        //         imageId: parseInt(imageId),
+        //         deleted: false  // Add this to ensure we don't get deleted records
+        //     } 
+        // });
+
+        // console.log("Existing projectImageAIDetection:", projectImageAIDetection);
 
         // If AI detection exists, update lastAction and return it
-        if (projectImageAIDetection) {
-            await updateProjectAction(parseInt(projectId), "ai_detection");
-            return res.status(200).json(formatResponse(
-                projectImageAIDetection, 
-                'Project image AI detection fetched successfully.', 
-                true
-            ));
-        }
+        // if (projectImageAIDetection) {
+        //     await updateProjectAction(parseInt(projectId), "ai_detection");
+        //     return res.status(200).json(formatResponse(
+        //         projectImageAIDetection, 
+        //         'Project image AI detection fetched successfully.', 
+        //         true
+        //     ));
+        // }
 
         // Verify that both project and project image exist
         const projectImage = await ProjectImages.findOne({
@@ -562,9 +566,11 @@ exports.getProjectImageAIDetection = async (req, res) => {
             include: [{
                 model: UserGallery,
                 as: 'userGallery',
-                attributes: ['imageUrl']
+                attributes: ['imageUrl', 'id']  // Also get the id for debugging
             }]
         });
+
+        console.log("Found projectImage:", projectImage?.toJSON());
 
         if (!projectImage) {
             return res.status(404).json(formatResponse(
@@ -583,39 +589,57 @@ exports.getProjectImageAIDetection = async (req, res) => {
         }
 
         // Process the image using existing processImage function
+        console.log("Attempting to process image with URL:", projectImage.userGallery.imageUrl);
         const processedImageResult = await processImage(projectImage.userGallery.imageUrl);
+        console.log("processedImageResult:", processedImageResult);
 
-        if (!processedImageResult) {
+        if (!processedImageResult || !processedImageResult.detections?.detections) {
             return res.status(500).json(formatResponse(
                 null, 
-                'Failed to process image for AI detection.', 
+                'Failed to process image for AI detection or invalid detection result.',
                 false
             ));
         }
 
-        // Save the detection results to database
-        projectImageAIDetection = await ProjectImageAIDetection.create({
-            projectId: parseInt(projectId),
-            imageId: parseInt(imageId),
-            detections: processedImageResult.detections.detections,
-            status: 'completed'
-        });
-
-        // After saving new AI detection
-        await updateProjectAction(parseInt(projectId), "ai_detection");
-
-        // Return the newly created AI detection
-        res.status(200).json(formatResponse(
-            projectImageAIDetection, 
+        return res.status(200).json(formatResponse(
+            {
+                data: processedImageResult.detections.detections
+            }, 
             'Project image AI detection processed and saved successfully.', 
             true
         ));
 
+        // try {
+        //     // Save the detection results to database
+        //     projectImageAIDetection = await ProjectImageAIDetection.create({
+        //         projectId: parseInt(projectId),
+        //         imageId: projectImage.id,  // Use the ProjectImage id, not the UserGallery id
+        //         detections: processedImageResult.detections.detections,
+        //         status: 'completed',
+        //         deleted: false
+        //     });
+
+        //     console.log("Created new AI detection:", projectImageAIDetection.toJSON());
+
+        //     // After saving new AI detection
+        //     await updateProjectAction(parseInt(projectId), "ai_detection");
+
+        //     // Return the newly created AI detection
+        //     return res.status(200).json(formatResponse(
+        //         projectImageAIDetection, 
+        //         'Project image AI detection processed and saved successfully.', 
+        //         true
+        //     ));
+        // } catch (createError) {
+        //     console.error("Error creating AI detection:", createError);
+        //     throw createError;  // Re-throw to be caught by outer catch block
+        // }
+
     } catch (error) {
         console.error('Error in getProjectImageAIDetection:', error);
-        res.status(500).json(formatResponse(
+        return res.status(500).json(formatResponse(
             null, 
-            'Failed to fetch or process project image AI detection', 
+            `Failed to fetch or process project image AI detection: ${error.message}`,
             false
         ));
     }
