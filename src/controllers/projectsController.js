@@ -523,7 +523,7 @@ exports.getUnityProgress = async (req, res) => {
 // get project image AI detection
 exports.getProjectImageAIDetection = async (req, res) => {
     try {
-        const { projectId, imageId } = req.query; // Changed from req.params to req.query
+        const { projectId, imageId } = req.query;
 
         // Validate required parameters
         if (!projectId || !imageId) {
@@ -537,7 +537,7 @@ exports.getProjectImageAIDetection = async (req, res) => {
         // First check if AI detection already exists
         let projectImageAIDetection = await ProjectImageAIDetection.findOne({ 
             where: { 
-                projectId: parseInt(projectId), // Convert to integer since query params are strings
+                projectId: parseInt(projectId),
                 imageId: parseInt(imageId)
             } 
         });
@@ -552,22 +552,38 @@ exports.getProjectImageAIDetection = async (req, res) => {
             ));
         }
 
-        // If not exists, get the image URL from UserGallery
-        const userGalleryImage = await UserGallery.findOne({
-            where: { id: parseInt(imageId) },
-            attributes: ['imageUrl']
+        // Verify that both project and project image exist
+        const projectImage = await ProjectImages.findOne({
+            where: { 
+                id: parseInt(imageId),
+                projectId: parseInt(projectId),
+                deleted: false
+            },
+            include: [{
+                model: UserGallery,
+                as: 'userGallery',
+                attributes: ['imageUrl']
+            }]
         });
 
-        if (!userGalleryImage) {
+        if (!projectImage) {
             return res.status(404).json(formatResponse(
                 null, 
-                'Image not found in gallery.', 
+                'Project image not found or does not belong to this project.', 
+                false
+            ));
+        }
+
+        if (!projectImage.userGallery?.imageUrl) {
+            return res.status(404).json(formatResponse(
+                null, 
+                'Image URL not found in gallery.', 
                 false
             ));
         }
 
         // Process the image using existing processImage function
-        const processedImageResult = await processImage(userGalleryImage.imageUrl);
+        const processedImageResult = await processImage(projectImage.userGallery.imageUrl);
 
         if (!processedImageResult) {
             return res.status(500).json(formatResponse(
