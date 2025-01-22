@@ -524,7 +524,7 @@ exports.getUnityProgress = async (req, res) => {
 exports.getProjectImageAIDetection = async (req, res) => {
     try {
         const { projectId, imageId } = req.query;
-        console.log("Received request with projectId:", projectId, "imageId:", imageId);
+        // console.log("Received request with projectId:", projectId, "imageId:", imageId);
 
         // Validate required parameters
         if (!projectId || !imageId) {
@@ -570,7 +570,7 @@ exports.getProjectImageAIDetection = async (req, res) => {
             }]
         });
 
-        console.log("Found projectImage:", projectImage?.toJSON());
+        // console.log("Found projectImage:", projectImage?.toJSON());
 
         if (!projectImage) {
             return res.status(404).json(formatResponse(
@@ -589,9 +589,9 @@ exports.getProjectImageAIDetection = async (req, res) => {
         }
 
         // Process the image using existing processImage function
-        console.log("Attempting to process image with URL:", projectImage.userGallery.imageUrl);
+        // console.log("Attempting to process image with URL:", projectImage.userGallery.imageUrl);
         const processedImageResult = await processImage(projectImage.userGallery.imageUrl);
-        console.log("processedImageResult:", processedImageResult);
+        // console.log("processedImageResult:", processedImageResult);
 
         if (!processedImageResult || !processedImageResult.detections?.detections) {
             return res.status(500).json(formatResponse(
