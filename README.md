@@ -1,7 +1,7 @@
 # AI Pipeline
 
 
-Setting up Environment Using Anaconda
+**Setting up Environment Using Anaconda**
 
 
 
