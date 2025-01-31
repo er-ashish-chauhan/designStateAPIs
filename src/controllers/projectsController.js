@@ -844,7 +844,7 @@ const inpaintImage = async (
                 'Content-Type': 'application/json'
             },
             // Add timeout to prevent hanging
-            timeout: 50000 // 50 seconds
+            timeout: 1000000 // 1000 seconds
         });
         console.log("response", response);
         if (response.data.status === 'success') {
