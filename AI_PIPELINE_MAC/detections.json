@@ -70,3 +70,676 @@
     "image_name": "image_name",
     "detections": []
 },
+{
+    "image_name": "image_name",
+    "detections": []
+},
+{
+    "image_name": "image_name",
+    "detections": []
+},
+{
+    "image_name": "image_name",
+    "detections": []
+},
+{
+    "image_name": "image_name",
+    "detections": []
+},
+{
+    "image_name": "image_name",
+    "detections": []
+},
+{
+    "image_name": "image_name",
+    "detections": []
+},
+{
+    "image_name": "image_name",
+    "detections": [
+        {
+            "class_name": "vase",
+            "bbox": {
+                "xmin": 1097,
+                "ymin": 659,
+                "xmax": 1196,
+                "ymax": 759
+            }
+        },
+        {
+            "class_name": "chair",
+            "bbox": {
+                "xmin": 208,
+                "ymin": 528,
+                "xmax": 464,
+                "ymax": 790
+            }
+        },
+        {
+            "class_name": "potted plant",
+            "bbox": {
+                "xmin": 1014,
+                "ymin": 439,
+                "xmax": 1267,
+                "ymax": 759
+            }
+        },
+        {
+            "class_name": "vase",
+            "bbox": {
+                "xmin": 92,
+                "ymin": 609,
+                "xmax": 130,
+                "ymax": 657
+            }
+        },
+        {
+            "class_name": "potted plant",
+            "bbox": {
+                "xmin": 51,
+                "ymin": 532,
+                "xmax": 172,
+                "ymax": 657
+            }
+        },
+        {
+            "class_name": "potted plant",
+            "bbox": {
+                "xmin": 229,
+                "ymin": 356,
+                "xmax": 323,
+                "ymax": 533
+            }
+        }
+    ]
+},
+{
+    "image_name": "image_name",
+    "detections": [
+        {
+            "class_name": "vase",
+            "bbox": {
+                "xmin": 1097,
+                "ymin": 659,
+                "xmax": 1196,
+                "ymax": 759
+            }
+        },
+        {
+            "class_name": "chair",
+            "bbox": {
+                "xmin": 208,
+                "ymin": 528,
+                "xmax": 464,
+                "ymax": 790
+            }
+        },
+        {
+            "class_name": "potted plant",
+            "bbox": {
+                "xmin": 1014,
+                "ymin": 439,
+                "xmax": 1267,
+                "ymax": 759
+            }
+        },
+        {
+            "class_name": "vase",
+            "bbox": {
+                "xmin": 92,
+                "ymin": 609,
+                "xmax": 130,
+                "ymax": 657
+            }
+        },
+        {
+            "class_name": "potted plant",
+            "bbox": {
+                "xmin": 51,
+                "ymin": 532,
+                "xmax": 172,
+                "ymax": 657
+            }
+        },
+        {
+            "class_name": "potted plant",
+            "bbox": {
+                "xmin": 229,
+                "ymin": 356,
+                "xmax": 323,
+                "ymax": 533
+            }
+        }
+    ]
+},
+{
+    "image_name": "image_name",
+    "detections": [
+        {
+            "class_name": "vase",
+            "bbox": {
+                "xmin": 1097,
+                "ymin": 659,
+                "xmax": 1196,
+                "ymax": 759
+            }
+        },
+        {
+            "class_name": "chair",
+            "bbox": {
+                "xmin": 208,
+                "ymin": 528,
+                "xmax": 464,
+                "ymax": 790
+            }
+        },
+        {
+            "class_name": "potted plant",
+            "bbox": {
+                "xmin": 1014,
+                "ymin": 439,
+                "xmax": 1267,
+                "ymax": 759
+            }
+        },
+        {
+            "class_name": "vase",
+            "bbox": {
+                "xmin": 92,
+                "ymin": 609,
+                "xmax": 130,
+                "ymax": 657
+            }
+        },
+        {
+            "class_name": "potted plant",
+            "bbox": {
+                "xmin": 51,
+                "ymin": 532,
+                "xmax": 172,
+                "ymax": 657
+            }
+        },
+        {
+            "class_name": "potted plant",
+            "bbox": {
+                "xmin": 229,
+                "ymin": 356,
+                "xmax": 323,
+                "ymax": 533
+            }
+        }
+    ]
+},
+{
+    "image_name": "image_name",
+    "detections": [
+        {
+            "class_name": "vase",
+            "bbox": {
+                "xmin": 1097,
+                "ymin": 659,
+                "xmax": 1196,
+                "ymax": 759
+            }
+        },
+        {
+            "class_name": "chair",
+            "bbox": {
+                "xmin": 208,
+                "ymin": 528,
+                "xmax": 464,
+                "ymax": 790
+            }
+        },
+        {
+            "class_name": "potted plant",
+            "bbox": {
+                "xmin": 1014,
+                "ymin": 439,
+                "xmax": 1267,
+                "ymax": 759
+            }
+        },
+        {
+            "class_name": "vase",
+            "bbox": {
+                "xmin": 92,
+                "ymin": 609,
+                "xmax": 130,
+                "ymax": 657
+            }
+        },
+        {
+            "class_name": "potted plant",
+            "bbox": {
+                "xmin": 51,
+                "ymin": 532,
+                "xmax": 172,
+                "ymax": 657
+            }
+        },
+        {
+            "class_name": "potted plant",
+            "bbox": {
+                "xmin": 229,
+                "ymin": 356,
+                "xmax": 323,
+                "ymax": 533
+            }
+        }
+    ]
+},
+{
+    "image_name": "image_name",
+    "detections": [
+        {
+            "class_name": "vase",
+            "bbox": {
+                "xmin": 1097,
+                "ymin": 659,
+                "xmax": 1196,
+                "ymax": 759
+            }
+        },
+        {
+            "class_name": "chair",
+            "bbox": {
+                "xmin": 208,
+                "ymin": 528,
+                "xmax": 464,
+                "ymax": 790
+            }
+        },
+        {
+            "class_name": "potted plant",
+            "bbox": {
+                "xmin": 1014,
+                "ymin": 439,
+                "xmax": 1267,
+                "ymax": 759
+            }
+        },
+        {
+            "class_name": "vase",
+            "bbox": {
+                "xmin": 92,
+                "ymin": 609,
+                "xmax": 130,
+                "ymax": 657
+            }
+        },
+        {
+            "class_name": "potted plant",
+            "bbox": {
+                "xmin": 51,
+                "ymin": 532,
+                "xmax": 172,
+                "ymax": 657
+            }
+        },
+        {
+            "class_name": "potted plant",
+            "bbox": {
+                "xmin": 229,
+                "ymin": 356,
+                "xmax": 323,
+                "ymax": 533
+            }
+        }
+    ]
+},
+{
+    "image_name": "image_name",
+    "detections": [
+        {
+            "class_name": "vase",
+            "bbox": {
+                "xmin": 1097,
+                "ymin": 659,
+                "xmax": 1196,
+                "ymax": 759
+            }
+        },
+        {
+            "class_name": "chair",
+            "bbox": {
+                "xmin": 208,
+                "ymin": 528,
+                "xmax": 464,
+                "ymax": 790
+            }
+        },
+        {
+            "class_name": "potted plant",
+            "bbox": {
+                "xmin": 1014,
+                "ymin": 439,
+                "xmax": 1267,
+                "ymax": 759
+            }
+        },
+        {
+            "class_name": "vase",
+            "bbox": {
+                "xmin": 92,
+                "ymin": 609,
+                "xmax": 130,
+                "ymax": 657
+            }
+        },
+        {
+            "class_name": "potted plant",
+            "bbox": {
+                "xmin": 51,
+                "ymin": 532,
+                "xmax": 172,
+                "ymax": 657
+            }
+        },
+        {
+            "class_name": "potted plant",
+            "bbox": {
+                "xmin": 229,
+                "ymin": 356,
+                "xmax": 323,
+                "ymax": 533
+            }
+        }
+    ]
+},
+{
+    "image_name": "image_name",
+    "detections": [
+        {
+            "class_name": "vase",
+            "bbox": {
+                "xmin": 1097,
+                "ymin": 659,
+                "xmax": 1196,
+                "ymax": 759
+            }
+        },
+        {
+            "class_name": "chair",
+            "bbox": {
+                "xmin": 208,
+                "ymin": 528,
+                "xmax": 464,
+                "ymax": 790
+            }
+        },
+        {
+            "class_name": "potted plant",
+            "bbox": {
+                "xmin": 1014,
+                "ymin": 439,
+                "xmax": 1267,
+                "ymax": 759
+            }
+        },
+        {
+            "class_name": "vase",
+            "bbox": {
+                "xmin": 92,
+                "ymin": 609,
+                "xmax": 130,
+                "ymax": 657
+            }
+        },
+        {
+            "class_name": "potted plant",
+            "bbox": {
+                "xmin": 51,
+                "ymin": 532,
+                "xmax": 172,
+                "ymax": 657
+            }
+        },
+        {
+            "class_name": "potted plant",
+            "bbox": {
+                "xmin": 229,
+                "ymin": 356,
+                "xmax": 323,
+                "ymax": 533
+            }
+        }
+    ]
+},
+{
+    "image_name": "image_name",
+    "detections": [
+        {
+            "class_name": "vase",
+            "bbox": {
+                "xmin": 1097,
+                "ymin": 659,
+                "xmax": 1196,
+                "ymax": 759
+            }
+        },
+        {
+            "class_name": "chair",
+            "bbox": {
+                "xmin": 208,
+                "ymin": 528,
+                "xmax": 464,
+                "ymax": 790
+            }
+        },
+        {
+            "class_name": "potted plant",
+            "bbox": {
+                "xmin": 1014,
+                "ymin": 439,
+                "xmax": 1267,
+                "ymax": 759
+            }
+        },
+        {
+            "class_name": "vase",
+            "bbox": {
+                "xmin": 92,
+                "ymin": 609,
+                "xmax": 130,
+                "ymax": 657
+            }
+        },
+        {
+            "class_name": "potted plant",
+            "bbox": {
+                "xmin": 51,
+                "ymin": 532,
+                "xmax": 172,
+                "ymax": 657
+            }
+        },
+        {
+            "class_name": "potted plant",
+            "bbox": {
+                "xmin": 229,
+                "ymin": 356,
+                "xmax": 323,
+                "ymax": 533
+            }
+        }
+    ]
+},
+{
+    "image_name": "image_name",
+    "detections": [
+        {
+            "class_name": "vase",
+            "bbox": {
+                "xmin": 1097,
+                "ymin": 659,
+                "xmax": 1196,
+                "ymax": 759
+            }
+        },
+        {
+            "class_name": "chair",
+            "bbox": {
+                "xmin": 208,
+                "ymin": 528,
+                "xmax": 464,
+                "ymax": 790
+            }
+        },
+        {
+            "class_name": "potted plant",
+            "bbox": {
+                "xmin": 1014,
+                "ymin": 439,
+                "xmax": 1267,
+                "ymax": 759
+            }
+        },
+        {
+            "class_name": "vase",
+            "bbox": {
+                "xmin": 92,
+                "ymin": 609,
+                "xmax": 130,
+                "ymax": 657
+            }
+        },
+        {
+            "class_name": "potted plant",
+            "bbox": {
+                "xmin": 51,
+                "ymin": 532,
+                "xmax": 172,
+                "ymax": 657
+            }
+        },
+        {
+            "class_name": "potted plant",
+            "bbox": {
+                "xmin": 229,
+                "ymin": 356,
+                "xmax": 323,
+                "ymax": 533
+            }
+        }
+    ]
+},
+{
+    "image_name": "image_name",
+    "detections": [
+        {
+            "class_name": "vase",
+            "bbox": {
+                "xmin": 1097,
+                "ymin": 659,
+                "xmax": 1196,
+                "ymax": 759
+            }
+        },
+        {
+            "class_name": "chair",
+            "bbox": {
+                "xmin": 208,
+                "ymin": 528,
+                "xmax": 464,
+                "ymax": 790
+            }
+        },
+        {
+            "class_name": "potted plant",
+            "bbox": {
+                "xmin": 1014,
+                "ymin": 439,
+                "xmax": 1267,
+                "ymax": 759
+            }
+        },
+        {
+            "class_name": "vase",
+            "bbox": {
+                "xmin": 92,
+                "ymin": 609,
+                "xmax": 130,
+                "ymax": 657
+            }
+        },
+        {
+            "class_name": "potted plant",
+            "bbox": {
+                "xmin": 51,
+                "ymin": 532,
+                "xmax": 172,
+                "ymax": 657
+            }
+        },
+        {
+            "class_name": "potted plant",
+            "bbox": {
+                "xmin": 229,
+                "ymin": 356,
+                "xmax": 323,
+                "ymax": 533
+            }
+        }
+    ]
+},
+{
+    "image_name": "image_name",
+    "detections": [
+        {
+            "class_name": "vase",
+            "bbox": {
+                "xmin": 1097,
+                "ymin": 659,
+                "xmax": 1196,
+                "ymax": 759
+            }
+        },
+        {
+            "class_name": "chair",
+            "bbox": {
+                "xmin": 208,
+                "ymin": 528,
+                "xmax": 464,
+                "ymax": 790
+            }
+        },
+        {
+            "class_name": "potted plant",
+            "bbox": {
+                "xmin": 1014,
+                "ymin": 439,
+                "xmax": 1267,
+                "ymax": 759
+            }
+        },
+        {
+            "class_name": "vase",
+            "bbox": {
+                "xmin": 92,
+                "ymin": 609,
+                "xmax": 130,
+                "ymax": 657
+            }
+        },
+        {
+            "class_name": "potted plant",
+            "bbox": {
+                "xmin": 51,
+                "ymin": 532,
+                "xmax": 172,
+                "ymax": 657
+            }
+        },
+        {
+            "class_name": "potted plant",
+            "bbox": {
+                "xmin": 229,
+                "ymin": 356,
+                "xmax": 323,
+                "ymax": 533
+            }
+        }
+    ]
+},

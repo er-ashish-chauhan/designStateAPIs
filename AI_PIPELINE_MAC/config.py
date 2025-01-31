@@ -17,5 +17,6 @@ ENABLE_INPAINTING = False
 # Inpainting method: "opencv" or "stable-diffusion"
 INPAINT_METHOD = "stable-diffusion"
 
-HOST = "http://34.203.14.46"
+# HOST = "http://34.203.14.46"
+HOST = "0.0.0.0"
 PORT = 3001
