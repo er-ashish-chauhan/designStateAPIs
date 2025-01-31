@@ -42,4 +42,7 @@ router.put('/unityProgress/:id', authenticateToken, projectsController.updateUni
 // Delete Unity Progress
 router.delete('/unityProgress/:id', authenticateToken, projectsController.deleteUnityProgress);
 
+// Route for marking AI detection as completed
+router.put('/markAIDetectionCompleted', authenticateToken, projectsController.markAIDetectionCompleted);
+
 module.exports = router;

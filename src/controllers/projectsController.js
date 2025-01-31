@@ -172,7 +172,7 @@ exports.getProjectsByGroup = async (req, res) => {
         // Fetch projects with their images and associated UserGallery with pagination
         const projects = await Projects.findAll({
             where: { projectGroupId: projectGroupId, deleted: false },
-            attributes: ['id', 'projectGroupId', 'name', 'type', 'updatedAt'],
+            attributes: ['id', 'projectGroupId', 'name', 'type', 'updatedAt', 'aiPipelineStatus'],
             include: [
                 {
                     model: ProjectImages,
@@ -384,7 +384,8 @@ exports.getImagesForProject = async (req, res) => {
             return {
                 ...imageData,
                 imageUrl: userGallery ? userGallery.imageUrl : null, // If userGallery exists, include the imageUrl
-                dimensionUnit: userGallery ? userGallery.dimensionUnit : null, // If userGallery exists, include the dimensionUnit
+                dimensionUnit: userGallery ? userGallery.dimensionUnit : null, // If userGallery exists, include the dimensionUnit,
+                aiPipelineStatus: project.aiPipelineStatus
             };
         });
 
@@ -546,13 +547,13 @@ exports.getProjectImageAIDetection = async (req, res) => {
         // If AI detections exist, combine them and return
         if (projectImageAIDetections && projectImageAIDetections.length > 0) {
             await updateProjectAction(parseInt(projectId), "ai_detection");
-            
+
             // Combine all detections into a single array with their IDs
             const combinedDetections = projectImageAIDetections.map(detection => ({
                 id: detection.id,
                 ...detection.detections
             }));
-            
+
             return res.status(200).json(formatResponse(
                 {
                     projectId: parseInt(projectId),
@@ -638,74 +639,117 @@ exports.getProjectImageAIDetection = async (req, res) => {
     }
 };
 
-// remove specific AI detection object
+// remove specific AI detection objects
 exports.removeProjectImageAIDetection = async (req, res) => {
     try {
-        const { projectId, imageId, detectedObjectId } = req.body;
+        const { projectId, imageId, detectedObjectIds } = req.body;
 
         // Validate required parameters
-        if (!projectId || !imageId || !detectedObjectId) {
+        if (!projectId || !imageId || !Array.isArray(detectedObjectIds) || detectedObjectIds.length === 0) {
             return res.status(400).json(formatResponse(
                 null,
-                'Project ID, Image ID, and detected object ID are required.',
+                'Project ID, Image ID, and array of detected object IDs are required.',
                 false
             ));
         }
 
-        // Find the specific AI detection record to remove
-        const aiDetection = await ProjectImageAIDetection.findOne({
+        // Find all AI detection records to remove
+        const aiDetections = await ProjectImageAIDetection.findAll({
             where: {
                 projectId: parseInt(projectId),
                 imageId: parseInt(imageId),
                 deleted: false,
-                id: parseInt(detectedObjectId)
+                id: detectedObjectIds
             }
         });
 
-        console.log("aiDetection", aiDetection.detections);
+        // console.log("aiDetections", aiDetections);
 
-        if (!aiDetection) {
+        if (!aiDetections || aiDetections.length === 0) {
             return res.status(404).json(formatResponse(
                 null,
-                'AI detection record not found.',
+                'AI detection records not found.',
                 false
             ));
         }
 
-        // Soft delete the specific detection
-        await aiDetection.update({ deleted: true });
+        console.log('Found AI detections:', aiDetections.map(d => d.toJSON()));
 
-        // Get remaining detections
-        const remainingDetections = await ProjectImageAIDetection.findAll({
-            where: {
-                projectId: parseInt(projectId),
-                imageId: parseInt(imageId),
-                deleted: false
+        // Collect all mask_ids and request_ids
+        const maskIds = [];
+        let requestId = null;
+
+        for (const detection of aiDetections) {
+            if (!detection.detections) {
+                console.warn(`Detection ${detection.id} has no detections object`);
+                continue;
             }
+
+            // Check if bbox exists and add its mask_id if available
+            if (detection.detections.mask_id) {
+                const maskId = detection.detections.mask_id
+                if (maskId) {
+                    maskIds.push(maskId);
+                }
+            }
+
+            // Store the request_id if we haven't found one yet
+            if (!requestId && detection.detections.request_id) {
+                requestId = detection.detections.request_id;
+            }
+        }
+
+        if (maskIds.length === 0 || !requestId) {
+            console.error('No valid mask_ids or request_id found:', {
+                maskIds,
+                requestId,
+                detections: aiDetections.map(d => d.detections)
+            });
+            return res.status(400).json(formatResponse(
+                null,
+                'No valid mask IDs or request ID found in the detections.',
+                false
+            ));
+        }
+
+        // Inpaint the image with all collected mask_ids
+        const inpaintedImage = await inpaintImage(maskIds, requestId);
+
+        if (!inpaintedImage) {
+            return res.status(500).json(formatResponse(
+                null,
+                'Failed to inpaint the image.',
+                false
+            ));
+        }
+
+        // Soft delete all the specified detections
+        await Promise.all(aiDetections.map(detection =>
+            detection.update({ deleted: true })
+        ));
+
+        // Update the project image with the inpainted image
+        await ProjectImages.update({
+            aiImageUrl: inpaintedImage.upload_response.data.urls[0]
+        }, {
+            where: { id: imageId }
         });
 
-        const updatedDetections = remainingDetections.map(detection => {
-            return {
-                id: detection.id,
-                ...detection.detections
-            }
-        });
-
+        // Update the project action
         await updateProjectAction(parseInt(projectId), "ai_detection_removed");
-
-        console.log("updatedDetections", updatedDetections);
 
         res.status(200).json(formatResponse({
             projectId,
             imageId,
-            detections: updatedDetections
-        }, 'Object removed from AI detection successfully.', true));
+            removedDetectionIds: detectedObjectIds,
+            aiDetectionImage: inpaintedImage.upload_response.data.urls[0]
+        }, 'Objects removed from AI detection successfully.', true));
 
     } catch (error) {
-        console.error('Error removing object from AI detection:', error);
+        console.error('Error removing objects from AI detection:', error);
         res.status(500).json(formatResponse(
             null,
-            'Failed to remove object from AI detection',
+            `Failed to remove objects from AI detection: ${error.message}`,
             false
         ));
     }
@@ -744,11 +788,11 @@ const updateProjectAction = async (projectId, lastAction) => {
 // process image
 const processImage = async (image) => {
     const url = process.env.AWS_IMAGE_BASE_URL + image; // Construct full image URL
-    console.log("Processing image URL:", url);
+    // console.log("Processing image URL:", url);
 
     try {
         // Configure the request to the Flask server
-        const flaskServerUrl = `http://${process.env.FLASK_HOST || 'localhost'}:${process.env.FLASK_PORT || 3001}/process-image`;
+        const flaskServerUrl = `http://${process.env.FLASK_HOST || 'localhost'}:${process.env.FLASK_PORT || 3001}/detect`;
         console.log("Flask server URL:", flaskServerUrl);
         // Send the image URL to the Flask server
         const response = await axios.post(flaskServerUrl, {
@@ -779,6 +823,42 @@ const processImage = async (image) => {
         return false;
     }
 };
+
+const inpaintImage = async (
+    maskIds,
+    requestId
+) => {
+    try {
+        const flaskServerUrl = `http://${process.env.FLASK_HOST || 'localhost'}:${process.env.FLASK_PORT || 3001}/inpaint`;
+        console.log("Flask server URL:", flaskServerUrl);
+        console.log("maskIds", {
+            mask_ids: maskIds,
+            request_id: requestId
+        });
+        // Send the image URL to the Flask server
+        const response = await axios.post(flaskServerUrl, {
+            mask_ids: maskIds,
+            request_id: requestId
+        }, {
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            // Add timeout to prevent hanging
+            timeout: 50000 // 50 seconds
+        });
+        console.log("response", response);
+        if (response.data.status === 'success') {
+            console.log('Image inpainting successful:', response.data);
+            return response.data;
+        } else {
+            console.error('Image inpainting failed:', response.data.message);
+            return false;
+        }
+    } catch (error) {
+        console.error('Error inpainting image:', error);
+        return false;
+    }
+}
 
 // Update Unity Progress
 exports.updateUnityProgress = async (req, res) => {
@@ -845,5 +925,55 @@ exports.deleteUnityProgress = async (req, res) => {
     } catch (error) {
         console.error('Error deleting unity progress:', error);
         res.status(500).json(formatResponse(null, 'Failed to delete unity progress', false));
+    }
+};
+
+// Mark AI Detection as completed
+exports.markAIDetectionCompleted = async (req, res) => {
+    try {
+        const { projectId } = req.body;
+
+        if (!projectId) {
+            return res.status(400).json(formatResponse(
+                null,
+                'Project ID is required.',
+                false
+            ));
+        }
+
+        // Find the project
+        const project = await Projects.findOne({
+            where: {
+                id: parseInt(projectId),
+                deleted: false
+            }
+        });
+
+        if (!project) {
+            return res.status(404).json(formatResponse(
+                null,
+                'Project not found.',
+                false
+            ));
+        }
+
+        // Update the project's AI status
+        await project.update({
+            aiPipelineStatus: 'completed',
+            lastAction: 'ai_detection_completed'
+        });
+
+        res.status(200).json(formatResponse({
+            projectId,
+            aiStatus: 'completed'
+        }, 'Project AI detection marked as completed successfully.', true));
+
+    } catch (error) {
+        console.error('Error marking AI detection as completed:', error);
+        res.status(500).json(formatResponse(
+            null,
+            `Failed to mark AI detection as completed: ${error.message}`,
+            false
+        ));
     }
 };

@@ -5,3 +5,10 @@ combined.log
 .env
 .env.local
 .env.prod.local
+.DS_Store
+AI/models/
+AI/__pycache__/
+AI/model_loader/__pycache__/
+AI/pipeline/__pycache__/
+AI/utils/__pycache__/
+AI/temp_requests/

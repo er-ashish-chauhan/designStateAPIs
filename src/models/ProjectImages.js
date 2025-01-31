@@ -10,6 +10,11 @@ const ProjectImages = sequelize.define('ProjectImages', {
         type: DataTypes.INTEGER,
         allowNull: false,
     },
+    aiImageUrl: {
+        type: DataTypes.STRING,
+        allowNull: true,
+        defaultValue: null
+    },
     name: {
         type: DataTypes.STRING,
         allowNull: false,
