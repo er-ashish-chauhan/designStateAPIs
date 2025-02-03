@@ -19,16 +19,15 @@ class InpaintingPipeline:
         return combined.astype(np.uint8) * 255
 
     @staticmethod
-    def dilate_masks(masks, dilation_size=15):
-        """Apply downward-only dilation to each mask"""
+    def dilate_masks(masks, dilation_size=5):
+        """Apply normal dilation with a 5x5 kernel to each mask"""
         dilated_masks = []
-        kernel = np.zeros((dilation_size, dilation_size), dtype=np.uint8)
-        kernel[dilation_size // 2:, :] = 1  # Downward dilation kernel
+        kernel = np.ones((dilation_size, dilation_size), dtype=np.uint8)  # 5x5 kernel for normal dilation
 
         for mask in masks:
             # Ensure mask is binary (0/255)
             binary_mask = (mask > 127).astype(np.uint8) * 255
-            dilated = cv2.dilate(binary_mask, kernel, iterations=1)
+            dilated = cv2.dilate(binary_mask, kernel, iterations=1)  # Apply normal dilation
             dilated_masks.append(dilated)
 
         return dilated_masks
