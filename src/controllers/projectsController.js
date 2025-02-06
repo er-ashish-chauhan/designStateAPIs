@@ -642,13 +642,13 @@ exports.getProjectImageAIDetection = async (req, res) => {
 // remove specific AI detection objects
 exports.removeProjectImageAIDetection = async (req, res) => {
     try {
-        const { projectId, imageId, detectedObjectIds } = req.body;
+        const { projectId, imageId, detectedObjectIds, imageUrl } = req.body;
 
         // Validate required parameters
-        if (!projectId || !imageId || !Array.isArray(detectedObjectIds) || detectedObjectIds.length === 0) {
+        if (!projectId || !imageId || !Array.isArray(detectedObjectIds) || detectedObjectIds.length === 0 || !imageUrl) {
             return res.status(400).json(formatResponse(
                 null,
-                'Project ID, Image ID, and array of detected object IDs are required.',
+                'Project ID, Image ID, array of detected object IDs, and image URL are required.',
                 false
             ));
         }
@@ -713,7 +713,7 @@ exports.removeProjectImageAIDetection = async (req, res) => {
         }
 
         // Inpaint the image with all collected mask_ids
-        const inpaintedImage = await inpaintImage(maskIds, requestId);
+        const inpaintedImage = await inpaintImage(maskIds, requestId, imageUrl);
 
         if (!inpaintedImage) {
             return res.status(500).json(formatResponse(
@@ -730,7 +730,7 @@ exports.removeProjectImageAIDetection = async (req, res) => {
 
         // Update the project image with the inpainted image
         await ProjectImages.update({
-            aiImageUrl: inpaintedImage.upload_response.data.urls[0]
+            aiImageUrl: inpaintedImage.upload_response.uploaded_image_url
         }, {
             where: { id: imageId }
         });
@@ -742,7 +742,7 @@ exports.removeProjectImageAIDetection = async (req, res) => {
             projectId,
             imageId,
             removedDetectionIds: detectedObjectIds,
-            aiDetectionImage: inpaintedImage.upload_response.data.urls[0]
+            aiDetectionImage: inpaintedImage.upload_response.uploaded_image_url
         }, 'Objects removed from AI detection successfully.', true));
 
     } catch (error) {
@@ -826,14 +826,16 @@ const processImage = async (image) => {
 
 const inpaintImage = async (
     maskIds,
-    requestId
+    requestId,
+    imageUrl
 ) => {
     try {
         const flaskServerUrl = `http://${process.env.FLASK_HOST || 'localhost'}:${process.env.FLASK_PORT || 3001}/inpaint`;
         console.log("Flask server URL:", flaskServerUrl);
         console.log("maskIds", {
             mask_ids: maskIds,
-            request_id: requestId
+            request_id: requestId,
+            image_url: imageUrl
         });
         // Send the image URL to the Flask server
         const response = await axios.post(flaskServerUrl, {
