@@ -467,7 +467,7 @@ exports.getUnityProgress = async (req, res) => {
                     as: 'images',
                     where: { deleted: false },
                     required: false,
-                    attributes: ['id', 'imageId', 'dimensions', 'type'],
+                    attributes: ['id', 'imageId', 'dimensions', 'type', 'aiImageUrl'],
                     include: [
                         {
                             model: UserGallery,
@@ -503,7 +503,8 @@ exports.getUnityProgress = async (req, res) => {
                 imageId: projectDetails.images[0].imageId,
                 dimensions: projectDetails.images[0].dimensions,
                 type: projectDetails.images[0].type,
-                imageUrl: projectDetails.images[0].userGallery?.imageUrl || null
+                imageUrl: projectDetails.images[0].userGallery?.imageUrl || null,
+                aiImageUrl: projectDetails.images[0].aiImageUrl || null
             } : null,
             images: undefined // Remove the images array since we're using a single image
         };
@@ -840,7 +841,8 @@ const inpaintImage = async (
         // Send the image URL to the Flask server
         const response = await axios.post(flaskServerUrl, {
             mask_ids: maskIds,
-            request_id: requestId
+            request_id: requestId,
+            image_url: imageUrl
         }, {
             headers: {
                 'Content-Type': 'application/json'
