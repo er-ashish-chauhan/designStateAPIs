@@ -2,7 +2,6 @@ from flask import Flask, request, jsonify
 import requests
 import os
 import uuid
-import base64
 import json
 import numpy as np
 from datetime import datetime
@@ -55,21 +54,24 @@ def handle_detection():
 def handle_inpainting():
     try:
         data = request.json
-        required_fields = ['request_id', 'mask_ids']
+        required_fields = ['request_id', 'image_url', 'mask_ids']
         if not all(field in data for field in required_fields):
             return jsonify({"status": "error", "message": "Missing required fields"}), 400
 
         request_id = data['request_id']
+        image_url = data['image_url']
         mask_ids = data['mask_ids']
 
-        # Load original image
-        original_path = os.path.join(TEMP_IMAGE_STORAGE, f"{request_id}_original.jpg")
-        if not os.path.exists(original_path):
-            return jsonify({"status": "error", "message": "Invalid request_id"}), 404
+        # Download original image from URL instead of local storage
+        response = requests.get(image_url)
+        response.raise_for_status()
+        image_data = response.content
+        
+        # Convert image to PIL format
+        original_image = Image.open(BytesIO(image_data)).convert("RGB")
 
         # Load and combine masks
         inpainting_pipeline = InpaintingPipeline(device="cpu")
-        original_image = Image.open(original_path).convert("RGB")
 
         # Combine selected masks into one
         combined_mask = inpainting_pipeline.load_masks(
@@ -91,7 +93,8 @@ def handle_inpainting():
         # Upload the inpainted image to the database
         upload_url = "http://localhost:3000/api/v1/uploadImage"  # Update with actual API URL
         folder = "AI_inpainted"  # Specify target folder
-        headers = {"Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwiZW1haWwiOiJyYXFlZWJAZ21haWwuY29tIiwiaWF0IjoxNzM4MDAxMzM5LCJleHAiOjE3Mzg2MDYxMzl9.pVsWQxnb_06X67rFF_eWxipba0aNgfN2YwmgOYqlQBQ"}  # Replace with actual token
+        headers = {"Authorization": "Bearer YOUR_ACCESS_TOKEN"}  # Replace with actual token
+
         with open(inpainted_path, "rb") as img_file:
             files = {
                 "images": (os.path.basename(inpainted_path), img_file, "image/jpeg"),
@@ -103,17 +106,19 @@ def handle_inpainting():
             upload_response = response.json()
             return jsonify({
                 "status": "success",
+                "request_id": request_id,
                 "message": "Image inpainted and uploaded successfully",
                 "upload_response": upload_response
             })
         else:
             return jsonify({
                 "status": "error",
+                "request_id": request_id,
                 "message": f"Failed to upload image: {response.text}"
             }), response.status_code
 
     except Exception as e:
-        return jsonify({"status": "error", "message": str(e)}), 500
+        return jsonify({"status": "error", "request_id": request_id, "message": str(e)}), 500
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 3001))
