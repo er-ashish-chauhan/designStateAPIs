@@ -742,7 +742,7 @@ exports.removeProjectImageAIDetection = async (req, res) => {
         await ProjectImages.update({
             aiImageUrl: inpaintedImage.upload_response.data.urls[0]
         }, {
-            where: { id: imageId }
+            where: { imageId: imageId, projectId: projectId }
         });
 
         // Update the project action
