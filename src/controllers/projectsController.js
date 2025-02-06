@@ -740,7 +740,7 @@ exports.removeProjectImageAIDetection = async (req, res) => {
 
         // Update the project image with the inpainted image
         await ProjectImages.update({
-            aiImageUrl: inpaintedImage.upload_response.uploaded_image_url
+            aiImageUrl: inpaintedImage.upload_response.data.urls[0]
         }, {
             where: { id: imageId }
         });
@@ -752,7 +752,7 @@ exports.removeProjectImageAIDetection = async (req, res) => {
             projectId,
             imageId,
             removedDetectionIds: detectedObjectIds,
-            aiDetectionImage: inpaintedImage.upload_response.uploaded_image_url
+            aiDetectionImage: inpaintedImage.upload_response.data.urls[0]
         }, 'Objects removed from AI detection successfully.', true));
 
     } catch (error) {
