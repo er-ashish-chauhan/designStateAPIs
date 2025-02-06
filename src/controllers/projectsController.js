@@ -645,6 +645,10 @@ exports.removeProjectImageAIDetection = async (req, res) => {
     try {
         const { projectId, imageId, detectedObjectIds, imageUrl } = req.body;
 
+        // Get auth token from request headers
+        const authHeader = req.headers['authorization'];
+        const token = authHeader && authHeader.split(' ')[1]; // Remove "Bearer " prefix
+
         // Validate required parameters
         if (!projectId || !imageId || !Array.isArray(detectedObjectIds) || detectedObjectIds.length === 0 || !imageUrl) {
             return res.status(400).json(formatResponse(
@@ -713,8 +717,13 @@ exports.removeProjectImageAIDetection = async (req, res) => {
             ));
         }
 
-        // Inpaint the image with all collected mask_ids
-        const inpaintedImage = await inpaintImage(maskIds, requestId, imageUrl);
+        // Pass token to inpaintImage if needed
+        const inpaintedImage = await inpaintImage(
+            maskIds,
+            requestId,
+            imageUrl,
+            token // Pass the token here
+        );
 
         if (!inpaintedImage) {
             return res.status(500).json(formatResponse(
@@ -825,32 +834,30 @@ const processImage = async (image) => {
     }
 };
 
+// Update inpaintImage function to accept token
 const inpaintImage = async (
     maskIds,
     requestId,
-    imageUrl
+    imageUrl,
+    token // Add token parameter
 ) => {
     try {
         const flaskServerUrl = `http://${process.env.FLASK_HOST || 'localhost'}:${process.env.FLASK_PORT || 3001}/inpaint`;
-        console.log("Flask server URL:", flaskServerUrl);
-        console.log("maskIds", {
-            mask_ids: maskIds,
-            request_id: requestId,
-            image_url: imageUrl
-        });
-        // Send the image URL to the Flask server
+
+        // Send the image URL to the Flask server with auth token
         const response = await axios.post(flaskServerUrl, {
             mask_ids: maskIds,
             request_id: requestId,
-            image_url: imageUrl
+            image_url: imageUrl,
+            token: token
         }, {
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}` // Include token in request headers
             },
-            // Add timeout to prevent hanging
-            timeout: 1000000 // 1000 seconds
+            timeout: 1000000
         });
-        console.log("response", response);
+
         if (response.data.status === 'success') {
             console.log('Image inpainting successful:', response.data);
             return response.data;

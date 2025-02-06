@@ -55,14 +55,14 @@ def handle_detection():
 def handle_inpainting():
     try:
         data = request.json
-        required_fields = ['request_id', 'image_url', 'mask_ids']
+        required_fields = ['request_id', 'image_url', 'mask_ids', 'token']
         if not all(field in data for field in required_fields):
             return jsonify({"status": "error", "message": "Missing required fields"}), 400
 
         request_id = data['request_id']
         image_url = data['image_url']
         mask_ids = data['mask_ids']
-
+        token = data['token']
         # Download original image from URL instead of local storage
         response = requests.get(image_url)
         response.raise_for_status()
@@ -94,7 +94,7 @@ def handle_inpainting():
         # Upload the inpainted image to the database
         upload_url = "http://localhost:3000/api/v1/uploadImage"  # Update with actual API URL
         folder = "AI_inpainted"  # Specify target folder
-        headers = {"Authorization": "Bearer YOUR_ACCESS_TOKEN"}  # Replace with actual token
+        headers = {"Authorization": f"Bearer {token}"}  # Replace with actual token
 
         with open(inpainted_path, "rb") as img_file:
             files = {
