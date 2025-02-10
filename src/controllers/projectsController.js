@@ -540,8 +540,7 @@ exports.getProjectImageAIDetection = async (req, res) => {
         let projectImageAIDetections = await ProjectImageAIDetection.findAll({
             where: {
                 projectId: parseInt(projectId),
-                imageId: parseInt(imageId),
-                deleted: false
+                imageId: parseInt(imageId)
             }
         });
 
@@ -552,7 +551,8 @@ exports.getProjectImageAIDetection = async (req, res) => {
             // Combine all detections into a single array with their IDs
             const combinedDetections = projectImageAIDetections.map(detection => ({
                 id: detection.id,
-                ...detection.detections
+                ...detection.detections,
+                deleted: detection.deleted
             }));
 
             return res.status(200).json(formatResponse(
@@ -604,6 +604,7 @@ exports.getProjectImageAIDetection = async (req, res) => {
                 });
                 return {
                     id: created.id,
+                    deleted: false,
                     ...created.detections
                 };
             }));
